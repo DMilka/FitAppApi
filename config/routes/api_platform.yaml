@@ -1,4 +1,4 @@
 api_platform:
-    resource: .
+    resource: api
     type: api_platform
     prefix: /api
