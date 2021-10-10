@@ -5,3 +5,7 @@
 authentication_token:
   path: /api/login
   methods: ['POST']
+
+register:
+  path: /api/register
+  controller: App\Core\Authentication\RegisterController::onRegister

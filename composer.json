@@ -4,7 +4,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=7.2.5",
+        "php": ">=7.4.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "api-platform/core": "^2.6",
@@ -31,8 +31,9 @@
         "symfony/serializer": "5.3.*",
         "symfony/twig-bundle": "5.3.*",
         "symfony/validator": "5.3.*",
-        "symfony/yaml": "5.3.*"
-    },
+        "symfony/yaml": "5.3.*",
+		"ext-json": "*"
+	},
     "require-dev": {
         "api-platform/schema-generator": "^3.0",
         "symfony/maker-bundle": "^1.33"
