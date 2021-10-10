@@ -48,8 +48,4 @@ class RegisterSubscriber extends HandlerAbstract implements EventSubscriberInter
 
         return $registerEvent;
     }
-
-
-
-
 }
