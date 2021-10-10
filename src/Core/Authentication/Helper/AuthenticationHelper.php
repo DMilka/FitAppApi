@@ -21,7 +21,13 @@ class AuthenticationHelper
     public const MIN_PASSWORD_LENGTH = 'min_password_length';
     public const MAX_PASSWORD_LENGTH = 'max_password_length';
 
-    public function authenticationLengthParameters(): array
+    public const MIN_LOGIN_LENGTH_VALUE = 5;
+    public const MAX_LOGIN_LENGTH_VALUE = 10;
+    public const MIN_PASSWORD_LENGTH_VALUE = 8;
+    public const MAX_PASSWORD_LENGTH_VALUE = 15;
+
+
+    public static function getAuthenticationLengthParameters(): array
     {
         return [
             self::MIN_LOGIN_LENGTH => 5,
