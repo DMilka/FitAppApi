@@ -8,13 +8,9 @@ class AuthenticationHelper
     public const LOGIN = 'username';
     public const PASSWORD = 'password';
     public const EMAIL = 'email';
+    public const ID = 'userId';
 
     // Exceptions message
-    public const LOGIN_LENGTH_EXCEPTION_MESSAGE = 'authentication:login.length';
-    public const LOGIN_EXIST_EXCEPTION_MESSAGE = 'authentication:login.exist';
-    public const PASSWORD_LENGTH_EXCEPTION_MESSAGE = 'authentication:password.length';
-    public const EMAIL_INCORRECT_EXCEPTION_MESSAGE = 'authentication:email.incorrect';
-    public const EMAIL_EXIST_EXCEPTION_MESSAGE = 'authentication:email.exist';
 
     public const MIN_LOGIN_LENGTH = 'min_login_length';
     public const MAX_LOGIN_LENGTH = 'max_login_length';

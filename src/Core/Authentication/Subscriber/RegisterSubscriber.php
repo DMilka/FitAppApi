@@ -29,7 +29,8 @@ class RegisterSubscriber extends HandlerAbstract implements EventSubscriberInter
         return [
             RegisterEvent::class => [
                 ['validateUser', 8192],
-                ['createUser', 4096],
+                ['checkUserExist', 4096],
+                ['createUser', 1],
             ]
         ];
     }
@@ -45,6 +46,13 @@ class RegisterSubscriber extends HandlerAbstract implements EventSubscriberInter
     public function validateUser(RegisterEvent $registerEvent): RegisterEvent
     {
         $this->registerValidationHandler->validateUser($registerEvent->getParams());
+
+        return $registerEvent;
+    }
+
+    public function checkUserExist(RegisterEvent $registerEvent): RegisterEvent
+    {
+        $this->registerValidationHandler->checkUserExist($registerEvent->getParams());
 
         return $registerEvent;
     }
