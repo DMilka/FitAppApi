@@ -6,11 +6,11 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UsersRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use App\Auth\RegisterController;
+use App\Core\Authentication\RegisterController;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource(
+ * ApiResource(
  *      collectionOperations={
  *          "get"={
  *              "normalization_context"={"groups"={"users_read"}}
@@ -30,7 +30,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     }
  * )
  * @ORM\Entity(repositoryClass=UsersRepository::class)
- * @method string getUserIdentifier()
  */
 class Users implements UserInterface
 {
