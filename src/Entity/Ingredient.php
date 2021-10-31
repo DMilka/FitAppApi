@@ -72,6 +72,13 @@ class Ingredient
         return $this->id;
     }
 
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getName(): ?string
     {
         return $this->name;
@@ -167,4 +174,24 @@ class Ingredient
 
         return $this;
     }
+
+    /**
+     * @return int
+     */
+    public function getAmountTypeId(): int
+    {
+        return $this->amountTypeId;
+    }
+
+    /**
+     * @param int $amountTypeId
+     * @return Ingredient
+     */
+    public function setAmountTypeId(int $amountTypeId): Ingredient
+    {
+        $this->amountTypeId = $amountTypeId;
+        return $this;
+    }
+
+
 }
