@@ -2,69 +2,108 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Repository\IngredientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
+ * @ApiResource(
+ *      collectionOperations={
+ *          "get"={
+ *              "normalization_context"={"groups"={"ingredient_read"}}
+ *          },
+ *          "post"={
+ *              "normalization_context"={"groups"={"ingredient_read"}},
+ *              "denormalization_context"={"groups"={"ingredient_write"}}
+ *          },
+ *     },
+ *     itemOperations={
+ *          "get"={
+ *              "normalization_context"={"groups"={"ingredient_read"}}
+ *          },
+ *          "put"={
+ *              "normalization_context"={"groups"={"ingredient_read"}},
+ *              "denormalization_context"={"groups"={"ingredient_update"}}
+ *          },}
+ * )
  * @ORM\Entity(repositoryClass=IngredientRepository::class)
  */
 class Ingredient
 {
     /**
+     * @Groups({"ingredient_read"})
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="id")
      */
     private int $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @Groups({"ingredient_read", "ingredient_write"})
+     * @ORM\Column(type="string", length=255, name="name")
      */
     private string $name;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"ingredient_read", "ingredient_write"})
+     * @ORM\Column(type="string", length=255, nullable=true, name="description")
      */
     private ?string $description = null;
 
     /**
-     * @ORM\Column(type="float")
+     * @Groups({"ingredient_read", "ingredient_write"})
+     * @ORM\Column(type="float", name="amount")
      */
     private ?float $amount = null;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @Groups({"ingredient_read", "ingredient_write"})
+     * @ORM\Column(type="float", nullable=true, name="protein")
      */
     private ?float $protein = null;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @Groups({"ingredient_read", "ingredient_write"})
+     * @ORM\Column(type="float", nullable=true, name="carbohydrate")
      */
     private ?float $carbohydrate = null;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @Groups({"ingredient_read", "ingredient_write"})
+     * @ORM\Column(type="float", nullable=true, name="fat")
      */
     private ?float $fat = null;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @Groups({"ingredient_read", "ingredient_write"})
+     * @ORM\Column(type="float", nullable=true, name="calorie")
      */
     private ?float $calorie = null;
 
     /**
+     * @Groups({"ingredient_write"})
+     * @ORM\Column(type="integer", nullable=false, name="user_id")
      * @ORM\ManyToOne(targetEntity=Users::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false,referencedColumnName="id")
      */
     private int $userId;
 
     /**
-     * @ORM\OneToMany(targetEntity=AmountType::class, mappedBy="ingredient", orphanRemoval=true)
-     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"ingredient_read", "ingredient_write"})
+     * @ORM\Column(type="integer", nullable=false, name="amount_type_id")
      */
     private int $amountTypeId;
+
+    /**
+     * @Groups({"ingredient_read", "ingredient_write"})
+     * @ORM\ManyToOne(targetEntity=AmountType::class)
+     * @ORM\JoinColumn(nullable=false,referencedColumnName="id")
+     */
+    private AmountType $amountType;
 
 
     public function getId(): ?int
@@ -192,6 +231,26 @@ class Ingredient
         $this->amountTypeId = $amountTypeId;
         return $this;
     }
+
+    /**
+     * @return AmountType
+     */
+    public function getAmountType(): AmountType
+    {
+        return $this->amountType;
+    }
+
+    /**
+     * @param AmountType $amountType
+     * @return Ingredient
+     */
+    public function setAmountType(AmountType $amountType): Ingredient
+    {
+        $this->amountType = $amountType;
+        return $this;
+    }
+
+
 
 
 }

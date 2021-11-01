@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AmountTypeRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -32,27 +33,30 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class AmountType
 {
     /**
+     * @Groups({"amount_type_read"})
+     * @ApiProperty(identifier=true)
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\SequenceGenerator(sequenceName="amount_type_id_seq")
+     * @ORM\Column(type="integer", name="id")
      */
     private ?int $id = null;
 
     /**
      * @Groups({"amount_type_read", "amount_type_write"})
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false, name="user_id")
      */
     private int $userId;
 
     /**
-     * @Groups({"amount_type_read", "amount_type_write"})
-     * @ORM\Column(type="string", length=255)
+     * @Groups({"amount_type_read", "amount_type_write","ingredient_read"})
+     * @ORM\Column(type="string", length=255, name="name")
      */
     private string $name;
 
     /**
      * @Groups({"amount_type_read", "amount_type_write"})
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, name="description")
      */
     private ?string $description = null;
 
