@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Security;
+namespace App\Core\Security;
 
 use App\Core\HandlerAbstract;
 use App\Core\Helpers\UserHelper;

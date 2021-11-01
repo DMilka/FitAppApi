@@ -4,8 +4,8 @@ namespace App\Security\Classes;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use App\Entity\AmountType;
-use App\Security\ExtensionAbstract;
-use App\Security\ExtensionInterface;
+use App\Core\Security\ExtensionAbstract;
+use App\Core\Security\ExtensionInterface;
 use Doctrine\ORM\QueryBuilder;
 
 class AmountTypeSecure extends ExtensionAbstract implements ExtensionInterface

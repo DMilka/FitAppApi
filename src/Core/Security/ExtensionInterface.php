@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Security;
+namespace App\Core\Security;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use Doctrine\ORM\QueryBuilder;
