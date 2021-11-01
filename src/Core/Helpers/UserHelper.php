@@ -3,7 +3,6 @@
 namespace App\Core\Helpers;
 
 use App\Entity\Users;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserHelper
@@ -16,9 +15,12 @@ class UserHelper
     }
 
 
-    public function getUser()
+    /** @return Users */
+    public function getUser(): Users
     {
-        return $this->tokenStorage->getToken()->getUser();
+        /** @var Users $user */
+        $user = $this->tokenStorage->getToken()->getUser();
+        return $user;
     }
 
 

@@ -7,7 +7,6 @@ use App\Entity\AmountType;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class DatabaseLifeCycleSubscriber implements EventSubscriberInterface
 {
@@ -30,16 +29,16 @@ class DatabaseLifeCycleSubscriber implements EventSubscriberInterface
 
     public function prePersist(LifecycleEventArgs $args): void
     {
-
         $object = $args->getObject();
 
         if($object instanceof AmountType) {
-            /** @var Users $user */
-            $user = $this->userHelper->getUser();
-
-            $object->setUserId($user->getId());
+            $this->fillWithUserId($object);
         }
+    }
 
-        $tmp = 1;
+    public function fillWithUserId($object): void
+    {
+        $user = $this->userHelper->getUser();
+        $object->setUserId($user->getId());
     }
 }
