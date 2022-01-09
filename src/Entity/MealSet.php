@@ -4,58 +4,58 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\AmountTypeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Repository\MealRepository;
 
 /**
  * @ApiResource(
  *      collectionOperations={
  *          "get"={
- *              "normalization_context"={"groups"={"amount_type_read"}}
+ *              "normalization_context"={"groups"={"meal_set_read"}}
  *          },
  *          "post"={
- *              "normalization_context"={"groups"={"amount_type_read"}},
- *              "denormalization_context"={"groups"={"amount_type_write"}}
+ *              "normalization_context"={"groups"={"meal_set_read"}},
+ *              "denormalization_context"={"groups"={"meal_set_write"}}
  *          },
  *     },
  *     itemOperations={
  *          "get"={
- *              "normalization_context"={"groups"={"amount_type_read"}}
+ *              "normalization_context"={"groups"={"meal_set_read"}}
  *          },
  *          "put"={
- *              "normalization_context"={"groups"={"amount_type_read"}},
- *              "denormalization_context"={"groups"={"amount_type_update"}}
+ *              "normalization_context"={"groups"={"meal_set_read"}},
+ *              "denormalization_context"={"groups"={"meal_set_update"}}
  *          },}
  * )
- * @ORM\Entity(repositoryClass=AmountTypeRepository::class)
+ * @ORM\Entity(repositoryClass=MealRepository::class)
  */
-class AmountType
+class MealSet
 {
     /**
-     * @Groups({"amount_type_read"})
+     * @Groups({"meal_set_set_read"})
      * @ApiProperty(identifier=true)
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\SequenceGenerator(sequenceName="amount_type_id_seq")
+     * @ORM\SequenceGenerator(sequenceName="meal_set_id_seq")
      * @ORM\Column(type="integer", name="id")
      */
     private ?int $id = null;
 
     /**
-     * @Groups({"amount_type_write"})
+     * @Groups({"meal_set_write"})
      * @ORM\Column(type="integer", nullable=false, name="user_id")
      */
     private int $userId;
 
     /**
-     * @Groups({"amount_type_read", "amount_type_write", "amount_type_update","ingredient_read"})
+     * @Groups({"meal_set_read", "meal_set_write","meal_set_update"})
      * @ORM\Column(type="string", length=255, name="name")
      */
     private string $name;
 
     /**
-     * @Groups({"amount_type_read", "amount_type_write", "amount_type_update"})
+     * @Groups({"meal_set_read", "meal_set_write","meal_set_update"})
      * @ORM\Column(type="string", length=255, name="description")
      */
     private ?string $description = null;
@@ -87,9 +87,9 @@ class AmountType
 
     /**
      * @param string|null $description
-     * @return AmountType
+     * @return MealSet
      */
-    public function setDescription(?string $description): AmountType
+    public function setDescription(?string $description): MealSet
     {
         $this->description = $description;
         return $this;
@@ -105,9 +105,9 @@ class AmountType
 
     /**
      * @param int $userId
-     * @return AmountType
+     * @return MealSet
      */
-    public function setUserId(int $userId): AmountType
+    public function setUserId(int $userId): MealSet
     {
         $this->userId = $userId;
         return $this;

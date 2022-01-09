@@ -6,12 +6,6 @@ use App\Entity\AmountType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @method AmountType|null find($id, $lockMode = null, $lockVersion = null)
- * @method AmountType|null findOneBy(array $criteria, array $orderBy = null)
- * @method AmountType[]    findAll()
- * @method AmountType[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
 class AmountTypeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -19,32 +13,4 @@ class AmountTypeRepository extends ServiceEntityRepository
         parent::__construct($registry, AmountType::class);
     }
 
-    // /**
-    //  * @return AmountType[] Returns an array of AmountType objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?AmountType
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

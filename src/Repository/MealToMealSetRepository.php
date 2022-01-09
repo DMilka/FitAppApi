@@ -2,14 +2,14 @@
 
 namespace App\Repository;
 
-use App\Entity\Ingredient;
+use App\Entity\MealToMealSet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class IngredientRepository extends ServiceEntityRepository
+class MealToMealSetRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Ingredient::class);
+        parent::__construct($registry, MealToMealSet::class);
     }
 }

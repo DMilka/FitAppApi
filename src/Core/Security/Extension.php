@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\Security;
 class Extension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
     const ENTITY_PATH = 'App\Entity';
-    const SECURE_PATH = 'Security\Classes';
+    const SECURE_PATH = 'Security\Entity';
     const CLASS_SUFFIX = 'Secure';
 
     /** @var ContainerInterface $container */

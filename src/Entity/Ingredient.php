@@ -3,10 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Repository\IngredientRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -43,46 +40,65 @@ class Ingredient
     private int $id;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write"})
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
      * @ORM\Column(type="string", length=255, name="name")
      */
     private string $name;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write"})
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
      * @ORM\Column(type="string", length=255, nullable=true, name="description")
      */
     private ?string $description = null;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write"})
-     * @ORM\Column(type="float", name="amount")
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @ORM\Column(type="integer", name="amount")
      */
-    private ?float $amount = null;
+    private ?int $amount = null;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write"})
-     * @ORM\Column(type="float", nullable=true, name="protein")
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @ORM\Column(type="integer", nullable=true, name="protein")
      */
-    private ?float $protein = null;
+    private ?int $protein = null;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write"})
-     * @ORM\Column(type="float", nullable=true, name="carbohydrate")
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @ORM\Column(type="integer", nullable=true, name="carbohydrate")
      */
-    private ?float $carbohydrate = null;
+    private ?int $carbohydrate = null;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write"})
-     * @ORM\Column(type="float", nullable=true, name="fat")
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @ORM\Column(type="integer", nullable=true, name="fat")
      */
-    private ?float $fat = null;
+    private ?int $fat = null;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write"})
-     * @ORM\Column(type="float", nullable=true, name="calorie")
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @ORM\Column(type="integer", nullable=true, name="calorie")
      */
-    private ?float $calorie = null;
+    private ?int $calorie = null;
+
+    /**
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @ORM\Column(type="integer", nullable=false, name="amount_type_id")
+     */
+    private int $amountTypeId;
+
+    /**
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @ORM\Column(type="integer", nullable=false, name="divider_value")
+     */
+    private int $dividerValue = 100;
+
+//    /**
+//     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+//     * @ORM\ManyToOne(targetEntity=AmountType::class)
+//     * @ORM\JoinColumn(nullable=false,referencedColumnName="id")
+//     */
+//    private AmountType $amountType;
 
     /**
      * @Groups({"ingredient_write"})
@@ -92,18 +108,6 @@ class Ingredient
      */
     private int $userId;
 
-    /**
-     * @Groups({"ingredient_read", "ingredient_write"})
-     * @ORM\Column(type="integer", nullable=false, name="amount_type_id")
-     */
-    private int $amountTypeId;
-
-    /**
-     * @Groups({"ingredient_read", "ingredient_write"})
-     * @ORM\ManyToOne(targetEntity=AmountType::class)
-     * @ORM\JoinColumn(nullable=false,referencedColumnName="id")
-     */
-    private AmountType $amountType;
 
 
     public function getId(): ?int
@@ -138,66 +142,6 @@ class Ingredient
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getAmount(): ?float
-    {
-        return $this->amount;
-    }
-
-    public function setAmount(float $amount): self
-    {
-        $this->amount = $amount;
-
-        return $this;
-    }
-
-    public function getProtein(): ?float
-    {
-        return $this->protein;
-    }
-
-    public function setProtein(?float $protein): self
-    {
-        $this->protein = $protein;
-
-        return $this;
-    }
-
-    public function getCarbohydrate(): ?float
-    {
-        return $this->carbohydrate;
-    }
-
-    public function setCarbohydrate(?float $carbohydrate): self
-    {
-        $this->carbohydrate = $carbohydrate;
-
-        return $this;
-    }
-
-    public function getFat(): ?float
-    {
-        return $this->fat;
-    }
-
-    public function setFat(?float $fat): self
-    {
-        $this->fat = $fat;
-
-        return $this;
-    }
-
-    public function getCalorie(): ?float
-    {
-        return $this->calorie;
-    }
-
-    public function setCalorie(?float $calorie): self
-    {
-        $this->calorie = $calorie;
 
         return $this;
     }
@@ -250,7 +194,112 @@ class Ingredient
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
+    public function getAmount(): ?int
+    {
+        return $this->amount;
+    }
 
+    /**
+     * @param int|null $amount
+     * @return Ingredient
+     */
+    public function setAmount(?int $amount): Ingredient
+    {
+        $this->amount = $amount;
+        return $this;
+    }
 
+    /**
+     * @return int|null
+     */
+    public function getProtein(): ?int
+    {
+        return $this->protein;
+    }
+
+    /**
+     * @param int|null $protein
+     * @return Ingredient
+     */
+    public function setProtein(?int $protein): Ingredient
+    {
+        $this->protein = $protein;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCarbohydrate(): ?int
+    {
+        return $this->carbohydrate;
+    }
+
+    /**
+     * @param int|null $carbohydrate
+     * @return Ingredient
+     */
+    public function setCarbohydrate(?int $carbohydrate): Ingredient
+    {
+        $this->carbohydrate = $carbohydrate;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getFat(): ?int
+    {
+        return $this->fat;
+    }
+
+    /**
+     * @param int|null $fat
+     * @return Ingredient
+     */
+    public function setFat(?int $fat): Ingredient
+    {
+        $this->fat = $fat;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCalorie(): ?int
+    {
+        return $this->calorie;
+    }
+
+    /**
+     * @param int|null $calorie
+     * @return Ingredient
+     */
+    public function setCalorie(?int $calorie): Ingredient
+    {
+        $this->calorie = $calorie;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDividerValue(): int
+    {
+        return $this->dividerValue;
+    }
+
+    /**
+     * @param int $dividerValue
+     * @return Ingredient
+     */
+    public function setDividerValue(int $dividerValue): Ingredient
+    {
+        $this->dividerValue = $dividerValue;
+        return $this;
+    }
 
 }

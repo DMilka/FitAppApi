@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Security\Classes;
+namespace App\Security\Entity;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use App\Entity\AmountType;
 use App\Core\Security\ExtensionAbstract;
 use App\Core\Security\ExtensionInterface;
+use App\Entity\Ingredient;
 use Doctrine\ORM\QueryBuilder;
 
-class AmountTypeSecure extends ExtensionAbstract implements ExtensionInterface
+class IngredientSecure extends ExtensionAbstract implements ExtensionInterface
 {
     public function prepareQueryForCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null, array $context = [])
     {
@@ -31,6 +32,6 @@ class AmountTypeSecure extends ExtensionAbstract implements ExtensionInterface
 
     public function getResourceClass(): string
     {
-        return AmountType::class;
+        return Ingredient::class;
     }
 }
