@@ -6,6 +6,7 @@ use App\Core\Helpers\UserHelper;
 use App\Entity\AmountType;
 use App\Entity\Ingredient;
 use App\Entity\Meal;
+use App\Entity\MealSet;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
@@ -16,7 +17,8 @@ class DatabaseLifeCycleSubscriber implements EventSubscriberInterface
     const FILL_WITH_USER_ID = [
         AmountType::class,
         Ingredient::class,
-        Meal::class
+        Meal::class,
+        MealSet::class,
     ];
 
 

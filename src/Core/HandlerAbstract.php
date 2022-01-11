@@ -31,7 +31,7 @@ class HandlerAbstract extends AbstractController
     }
 
 
-    public function persist(object $object):void
+    public function databasePersist(object $object):void
     {
         try {
             $this->getManager()->persist($object);
