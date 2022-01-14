@@ -21,6 +21,8 @@ abstract class DataPersisterExtension extends HandlerAbstract implements CustomD
             $this->overridePersist($data,$context);
             $this->postPersist($data,$context);
         }
+
+        return $data;
     }
 
     /**

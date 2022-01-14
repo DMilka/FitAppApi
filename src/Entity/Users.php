@@ -124,4 +124,10 @@ class Users implements UserInterface
     {
         // TODO: Implement @method string getUserIdentifier()
     }
+
+    public function getUserIdentifier(): string
+    {
+        // TODO: Implement getUserIdentifier() method.
+        return '';
+    }
 }

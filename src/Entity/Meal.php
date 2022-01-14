@@ -10,6 +10,7 @@ use App\Repository\MealRepository;
 
 /**
  * @ApiResource(
+ *     attributes={"security"= "is_granted('ROLE_USER')"},
  *      collectionOperations={
  *          "get"={
  *              "normalization_context"={"groups"={"meal_read"}}
@@ -59,6 +60,12 @@ class Meal
      * @ORM\Column(type="string", length=255, name="description")
      */
     private ?string $description = null;
+
+    /**
+     * @Groups({"meal_read", "meal_write","meal_update"})
+     */
+    private ?string $ingredientIds = null;
+
 
     public function getId(): ?int
     {
@@ -113,5 +120,21 @@ class Meal
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getIngredientIds(): ?string
+    {
+        return $this->ingredientIds;
+    }
 
+    /**
+     * @param string|null $ingredientIds
+     * @return Meal
+     */
+    public function setIngredientIds(?string $ingredientIds): Meal
+    {
+        $this->ingredientIds = $ingredientIds;
+        return $this;
+    }
 }

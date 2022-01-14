@@ -2,8 +2,10 @@
 
 namespace App\Core;
 
+use App\Core\Helpers\UserHelper;
 use App\Core\Logger\LoggerTrait;
 use App\Core\Database\HandlerDatabaseTrait;
+use App\Entity\Users;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -18,11 +20,15 @@ class HandlerAbstract extends AbstractController
     /** @var EventDispatcherInterface|null $eventDispatcher */
     private EventDispatcherInterface $eventDispatcher;
 
+    /** @var UserHelper $userHelper */
+    private UserHelper $userHelper;
 
-    public function __construct(ManagerRegistry $managerRegistry, EventDispatcherInterface $eventDispatcher)
+
+    public function __construct(ManagerRegistry $managerRegistry, EventDispatcherInterface $eventDispatcher, UserHelper $userHelper)
     {
         $this->managerRegistry = $managerRegistry;
         $this->eventDispatcher = $eventDispatcher;
+        $this->userHelper = $userHelper;
     }
 
     public function getEventDispatcher(): ?EventDispatcherInterface
@@ -31,7 +37,7 @@ class HandlerAbstract extends AbstractController
     }
 
 
-    public function databasePersist(object $object):void
+    public function dbPersist(object $object):void
     {
         try {
             $this->getManager()->persist($object);
@@ -40,12 +46,22 @@ class HandlerAbstract extends AbstractController
         }
     }
 
-    public function flush():void
+    public function dbFlush():void
     {
         try {
             $this->getManager()->flush();
         } catch (\Exception $exception) {
             $this->logCritical($exception->getMessage(),__METHOD__);
         }
+    }
+
+    public function getUser(): Users
+    {
+        return $this->userHelper->getUser();
+    }
+
+    public function getUserHelper(): UserHelper
+    {
+        return $this->userHelper;
     }
 }

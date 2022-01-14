@@ -3,6 +3,12 @@
 namespace App\Persisters;
 
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
+use App\Core\Authentication\Helper\FormHelper;
+use App\Core\Exceptions\StandardExceptions\ItemNotFoundException;
+use App\Core\Exceptions\StandardExceptions\WrongOwnerException;
+use App\Core\Exceptions\StandardExceptions\WrongValueException;
+use App\Entity\Ingredient;
+use App\Entity\IngredientToMeal;
 use App\Entity\Meal;
 use App\Persisters\Core\DataPersisterExtension;
 
@@ -19,9 +25,9 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
     /**
      * @inheritDoc
      */
-    public function persist($data, array $context = []): void
+    public function persist($data, array $context = []): object
     {
-        parent::persist($data,$context);
+        return parent::persist($data,$context);
     }
 
     /**
@@ -34,17 +40,45 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
 
     public function prePersist($data, $context = []): void
     {
-        // TODO: Implement prePersist() method.
+        $this->checkIfUserHasHisOwnIngredients($data);
     }
 
+    /**
+     * @param $data Meal
+     * @param $context
+     * @return void
+     */
     public function overridePersist($data, $context = []): void
     {
-        // TODO: Implement overridePersist() method.
+        FormHelper::checkNullValueWithException($data->getName());
+        $this->dbPersist($data);
+        $this->dbFlush();
     }
 
+    /**
+     * @param $data Meal
+     * @param $context
+     * @return void
+     */
     public function postPersist($data, $context = []): void
     {
-        // TODO: Implement postPersist() method.
+        $ids = $data->getIngredientIds();
+
+        if($ids) {
+            $ids = json_decode($ids);
+            if(is_array($ids)) {
+                foreach($ids as $id) {
+                    $ingredientToMeal = new IngredientToMeal();
+
+                    $ingredientToMeal->setIngredientId($id);
+                    $ingredientToMeal->setMealId($data->getId());
+
+                    $this->dbPersist($ingredientToMeal);
+                }
+
+                $this->dbFlush();
+            }
+        }
     }
 
     public function preUpdate($data, $context = []): void
@@ -54,7 +88,8 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
 
     public function update($data, $context = []): void
     {
-        // TODO: Implement update() method.
+        FormHelper::checkNullValueWithException($data->getName());
+        $this->dbFlush();
     }
 
     public function postUpdate($data, $context = []): void
@@ -75,6 +110,36 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
     public function postRemove($data, $context = []): void
     {
         // TODO: Implement postRemove() method.
+    }
+
+    private function checkIfUserHasHisOwnIngredients(Meal $data): void
+    {
+        $ids = $data->getIngredientIds();
+
+        if($ids) {
+            $user = $this->getUserHelper()->getUser();
+            $ids = json_decode($ids);
+            if(is_array($ids)) {
+                foreach($ids as $id) {
+                    if(!is_int($id)) {
+                        throw new WrongValueException(WrongValueException::MESSAGE);
+                    }
+
+                    /** @var Ingredient $ingredient */
+                    $ingredient = $this->getIngredientRepository()->find($id);
+
+                    if(!$ingredient) {
+                        throw new ItemNotFoundException(ItemNotFoundException::MESSAGE);
+                    }
+
+                    if($ingredient->getUserId() !== $user->getId()) {
+                        throw new WrongOwnerException(WrongOwnerException::MESSAGE);
+                    }
+                }
+            } else {
+                throw new WrongValueException(WrongValueException::MESSAGE);
+            }
+        }
     }
 
 }

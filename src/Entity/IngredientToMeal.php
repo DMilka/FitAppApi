@@ -43,12 +43,6 @@ class IngredientToMeal
     private ?int $id = null;
 
     /**
-     * @Groups({"ingredient_to_meal_write"})
-     * @ORM\Column(type="integer", nullable=false, name="user_id")
-     */
-    private int $userId;
-
-    /**
      * @Groups({"ingredient_to_meal_read", "ingredient_to_meal_write","ingredient_to_meal_update"})
      * @ORM\Column(type="integer",  name="ingredient_id", nullable=false)
      */
@@ -63,24 +57,6 @@ class IngredientToMeal
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getUserId(): int
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param int $userId
-     * @return IngredientToMeal
-     */
-    public function setUserId(int $userId): IngredientToMeal
-    {
-        $this->userId = $userId;
-        return $this;
     }
 
     /**
