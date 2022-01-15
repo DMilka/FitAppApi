@@ -7,6 +7,7 @@ use App\Core\Authentication\Helper\FormHelper;
 use App\Core\Exceptions\StandardExceptions\ItemNotFoundException;
 use App\Core\Exceptions\StandardExceptions\WrongOwnerException;
 use App\Core\Exceptions\StandardExceptions\WrongValueException;
+use App\Core\Helpers\ArrayHelper;
 use App\Entity\Ingredient;
 use App\Entity\IngredientToMeal;
 use App\Entity\Meal;
@@ -81,9 +82,8 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
         }
     }
 
-    public function preUpdate($data, $context = []): void
-    {
-        // TODO: Implement preUpdate() method.
+    public function preUpdate($data, $context = []): void {
+        $this->checkIfUserHasHisOwnIngredients($data);
     }
 
     public function update($data, $context = []): void
@@ -92,25 +92,74 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
         $this->dbFlush();
     }
 
-    public function postUpdate($data, $context = []): void
-    {
-        // TODO: Implement postUpdate() method.
+    /**
+     * @param $data Meal
+     * @param $context
+     * @return void
+     */
+    public function postUpdate($data, $context = []): void {
+        $oldElements = [];
+        $newElements = [];
+        $user = $this->getUserHelper()->getUser();
+
+        // Get assigned elements
+        /** @var IngredientToMeal[] $assignedIngredients */
+        $assignedIngredients = $this->getIngredientToMealRepository()->getAllIngredientForGivenMeal($data);
+        foreach ($assignedIngredients as $assignedIngredient) {
+            $oldElements[] = $assignedIngredient->getIngredientId();
+        }
+        // Get new elements
+        $ids = $data->getIngredientIds();
+        if($ids) {
+            $ids = json_decode($ids);
+            if (is_array($ids)) {
+                $newElements = $ids;
+            }
+        }
+
+        // Elements to delete
+        $toDelete = ArrayHelper::getOldElementsFromArrays($oldElements, $newElements);
+        // Elements to add
+        $toAdd = ArrayHelper::getNewElementsFromArrays($oldElements, $newElements);
+
+        foreach ($toDelete as $id) {
+            $ingredientToMeal = $this->getIngredientToMealRepository()->getOneByMealAndIngredientId($data, $id);
+
+            $this->dbRemove($ingredientToMeal);
+        }
+
+        foreach ($toAdd as $id) {
+            if(!is_int($id)) {
+                throw new WrongValueException(WrongValueException::MESSAGE);
+            }
+
+            /** @var Ingredient $ingredient */
+            $ingredient = $this->getIngredientRepository()->find($id);
+
+            if(!$ingredient) {
+                throw new ItemNotFoundException(ItemNotFoundException::MESSAGE);
+            }
+
+            if($ingredient->getUserId() !== $user->getId()) {
+                throw new WrongOwnerException(WrongOwnerException::MESSAGE);
+            }
+
+            $ingredientToMeal = new IngredientToMeal();
+
+            $ingredientToMeal->setMealId($data->getId());
+            $ingredientToMeal->setIngredientId($id);
+
+            $this->dbPersist($ingredientToMeal);
+        }
+
+        $this->dbFlush();
     }
 
-    public function preRemove($data, $context = []): void
-    {
-        // TODO: Implement preRemove() method.
-    }
+    public function preRemove($data, $context = []): void {}
 
-    public function overrideRemove($data, $context = []): void
-    {
-        // TODO: Implement overrideRemove() method.
-    }
+    public function overrideRemove($data, $context = []): void {}
 
-    public function postRemove($data, $context = []): void
-    {
-        // TODO: Implement postRemove() method.
-    }
+    public function postRemove($data, $context = []): void {}
 
     private function checkIfUserHasHisOwnIngredients(Meal $data): void
     {

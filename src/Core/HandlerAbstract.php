@@ -55,6 +55,15 @@ class HandlerAbstract extends AbstractController
         }
     }
 
+    public function dbRemove(object $object): void
+    {
+        try {
+            $this->getManager()->remove($object);
+        } catch (\Exception $exception) {
+            $this->logCritical($exception->getMessage(),__METHOD__);
+        }
+    }
+
     public function getUser(): Users
     {
         return $this->userHelper->getUser();

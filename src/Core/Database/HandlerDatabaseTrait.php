@@ -4,9 +4,11 @@ namespace App\Core\Database;
 
 use App\Entity\AmountType;
 use App\Entity\Ingredient;
+use App\Entity\IngredientToMeal;
 use App\Entity\Users;
 use App\Repository\AmountTypeRepository;
 use App\Repository\IngredientRepository;
+use App\Repository\IngredientToMealRepository;
 use App\Repository\UsersRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -39,5 +41,10 @@ trait HandlerDatabaseTrait
     public function getIngredientRepository(): IngredientRepository
     {
         return $this->getRepositoryForClass(Ingredient::class);
+    }
+
+    public function getIngredientToMealRepository(): IngredientToMealRepository
+    {
+        return $this->getRepositoryForClass(IngredientToMeal::class);
     }
 }
