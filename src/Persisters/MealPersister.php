@@ -122,11 +122,7 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
         // Elements to add
         $toAdd = ArrayHelper::getNewElementsFromArrays($oldElements, $newElements);
 
-        foreach ($toDelete as $id) {
-            $ingredientToMeal = $this->getIngredientToMealRepository()->getOneByMealAndIngredientId($data, $id);
-
-            $this->dbRemove($ingredientToMeal);
-        }
+        $this->getIngredientToMealRepository()->deleteByIngredientIdsAndMealId($toDelete, $data->getId());
 
         foreach ($toAdd as $id) {
             if(!is_int($id)) {

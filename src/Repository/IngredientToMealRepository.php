@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Core\Logger\LoggerTrait;
 use App\Entity\Ingredient;
 use App\Entity\IngredientToMeal;
 use App\Entity\Meal;
@@ -10,6 +11,8 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class IngredientToMealRepository extends ServiceEntityRepository
 {
+    use LoggerTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, IngredientToMeal::class);
@@ -47,5 +50,18 @@ class IngredientToMealRepository extends ServiceEntityRepository
         }
 
         return null;
+    }
+
+    public function deleteByIngredientIdsAndMealId(array $ingredientIds, int $mealId ): void
+    {
+        $ids = implode("," ,$ingredientIds);
+        $sql = "DELETE FROM ingredient_to_meal WHERE ingredient_id IN ($ids) AND meal_id = $mealId";
+
+        try {
+            $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+            $stmt->executeStatement();
+        } catch (\Exception $e) {
+            $this->logCritical($e->getMessage(), __METHOD__);
+        }
     }
 }
