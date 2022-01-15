@@ -31,7 +31,7 @@ class IngredientToMealRepository extends ServiceEntityRepository
         return [];
     }
 
-    public function getOneByMealAndIngredientId(Meal $meal, int $ingredientId): array
+    public function getOneByMealAndIngredientId(Meal $meal, int $ingredientId): ?IngredientToMeal
     {
         $query = $this->createQueryBuilder('itm')
             ->andWhere('itm.mealId = :id')
@@ -40,12 +40,12 @@ class IngredientToMealRepository extends ServiceEntityRepository
             ->setParameter('id2', $ingredientId);
 
         try {
-            $result = $query->getQuery()->getResult();
+            $result = $query->getQuery()->getOneOrNullResult();
             return $result;
         } catch (\Exception $e) {
             $this->logCritical($e->getMessage(), __METHOD__);
         }
 
-        return [];
+        return null;
     }
 }
