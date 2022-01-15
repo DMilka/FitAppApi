@@ -125,17 +125,19 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
         $this->getIngredientToMealRepository()->deleteByIngredientIdsAndMealId($toDelete, $data->getId());
 
         foreach ($toAdd as $id) {
-            if(!is_int($id)) {
+            if (!is_int($id)) {
                 throw new WrongValueException(WrongValueException::MESSAGE);
             }
+        }
 
-            /** @var Ingredient $ingredient */
-            $ingredient = $this->getIngredientRepository()->find($id);
+        /** @var Ingredient[] $ingredients */
+        $ingredients = $this->getIngredientRepository()->getIngredientsByIds($toAdd);
 
-            if(!$ingredient) {
-                throw new ItemNotFoundException(ItemNotFoundException::MESSAGE);
-            }
+        if(count($ingredients) !== count($toAdd)) {
+            throw new ItemNotFoundException(ItemNotFoundException::MESSAGE);
+        }
 
+        foreach($ingredients as $ingredient) {
             if($ingredient->getUserId() !== $user->getId()) {
                 throw new WrongOwnerException(WrongOwnerException::MESSAGE);
             }
@@ -143,11 +145,10 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
             $ingredientToMeal = new IngredientToMeal();
 
             $ingredientToMeal->setMealId($data->getId());
-            $ingredientToMeal->setIngredientId($id);
+            $ingredientToMeal->setIngredientId($ingredient->getId());
 
             $this->dbPersist($ingredientToMeal);
         }
-
         $this->dbFlush();
     }
 
