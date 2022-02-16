@@ -64,4 +64,16 @@ class IngredientToMealRepository extends ServiceEntityRepository
             $this->logCritical($e->getMessage(), __METHOD__);
         }
     }
+
+    public function deleteAllByMealId(int $mealId): void
+    {
+        $sql = "DELETE FROM ingredient_to_meal WHERE meal_id = $mealId";
+
+        try {
+            $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+            $stmt->executeStatement();
+        } catch (\Exception $e) {
+            $this->logCritical($e->getMessage(), __METHOD__);
+        }
+    }
 }

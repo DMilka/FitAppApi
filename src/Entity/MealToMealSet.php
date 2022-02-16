@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Core\Database\Autofill\Entity\UserFill;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\MealToMealSetRepository;
@@ -30,7 +31,7 @@ use App\Repository\MealToMealSetRepository;
  * )
  * @ORM\Entity(repositoryClass=MealToMealSetRepository::class)
  */
-class MealToMealSet
+class MealToMealSet extends UserFill
 {
     /**
      * @Groups({"meal_to_meal_set_read"})
@@ -41,12 +42,6 @@ class MealToMealSet
      * @ORM\Column(type="integer", name="id")
      */
     private ?int $id = null;
-
-    /**
-     * @Groups({"meal_to_meal_set_write"})
-     * @ORM\Column(type="integer", nullable=false, name="user_id")
-     */
-    private int $userId;
 
     /**
      * @Groups({"meal_to_meal_set_read", "meal_to_meal_set_write","meal_to_meal_set_update"})
@@ -63,24 +58,6 @@ class MealToMealSet
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getUserId(): int
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param int $userId
-     * @return MealToMealSet
-     */
-    public function setUserId(int $userId): MealToMealSet
-    {
-        $this->userId = $userId;
-        return $this;
     }
 
     /**

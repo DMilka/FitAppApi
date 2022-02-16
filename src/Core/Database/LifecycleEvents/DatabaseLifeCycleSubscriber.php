@@ -2,6 +2,7 @@
 
 namespace App\Core\Database\LifecycleEvents;
 
+use App\Core\Database\Autofill\Entity\UserFill;
 use App\Core\Helpers\UserHelper;
 use App\Entity\AmountType;
 use App\Entity\Ingredient;
@@ -46,7 +47,7 @@ class DatabaseLifeCycleSubscriber implements EventSubscriberInterface
 
     private function checkToFillWithUserId($object): void
     {
-        if(in_array(get_class($object), self::FILL_WITH_USER_ID)) {
+        if($object instanceof UserFill) {
             $this->fillWithUserId($object);
         }
     }

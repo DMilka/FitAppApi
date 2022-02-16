@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Core\Database\Autofill\Entity\UserFill;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\MealRepository;
@@ -30,7 +31,7 @@ use App\Repository\MealRepository;
  * )
  * @ORM\Entity(repositoryClass=MealRepository::class)
  */
-class MealSet
+class MealSet extends UserFill
 {
     /**
      * @Groups({"meal_set_set_read"})
@@ -41,12 +42,6 @@ class MealSet
      * @ORM\Column(type="integer", name="id")
      */
     private ?int $id = null;
-
-    /**
-     * @Groups({"meal_set_write"})
-     * @ORM\Column(type="integer", nullable=false, name="user_id")
-     */
-    private int $userId;
 
     /**
      * @Groups({"meal_set_read", "meal_set_write","meal_set_update"})
@@ -94,24 +89,4 @@ class MealSet
         $this->description = $description;
         return $this;
     }
-
-    /**
-     * @return int
-     */
-    public function getUserId(): int
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param int $userId
-     * @return MealSet
-     */
-    public function setUserId(int $userId): MealSet
-    {
-        $this->userId = $userId;
-        return $this;
-    }
-
-
 }

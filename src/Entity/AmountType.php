@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Core\Database\Autofill\Entity\UserFill;
 use App\Repository\AmountTypeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -30,7 +31,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * )
  * @ORM\Entity(repositoryClass=AmountTypeRepository::class)
  */
-class AmountType
+class AmountType extends UserFill
 {
     /**
      * @Groups({"amount_type_read"})
@@ -41,12 +42,6 @@ class AmountType
      * @ORM\Column(type="integer", name="id")
      */
     private ?int $id = null;
-
-    /**
-     * @Groups({"amount_type_write"})
-     * @ORM\Column(type="integer", nullable=false, name="user_id")
-     */
-    private int $userId;
 
     /**
      * @Groups({"amount_type_read", "amount_type_write", "amount_type_update","ingredient_read"})
@@ -94,24 +89,4 @@ class AmountType
         $this->description = $description;
         return $this;
     }
-
-    /**
-     * @return int
-     */
-    public function getUserId(): int
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param int $userId
-     * @return AmountType
-     */
-    public function setUserId(int $userId): AmountType
-    {
-        $this->userId = $userId;
-        return $this;
-    }
-
-
 }

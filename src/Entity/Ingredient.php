@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Core\Database\Autofill\Entity\UserFill;
 use App\Repository\IngredientRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -29,7 +30,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * )
  * @ORM\Entity(repositoryClass=IngredientRepository::class)
  */
-class Ingredient
+class Ingredient extends UserFill
 {
     /**
      * @Groups({"ingredient_read"})
@@ -93,22 +94,6 @@ class Ingredient
      */
     private int $dividerValue = 100;
 
-//    /**
-//     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
-//     * @ORM\ManyToOne(targetEntity=AmountType::class)
-//     * @ORM\JoinColumn(nullable=false,referencedColumnName="id")
-//     */
-//    private AmountType $amountType;
-
-    /**
-     * @Groups({"ingredient_write"})
-     * @ORM\Column(type="integer", nullable=false, name="user_id")
-     * @ORM\ManyToOne(targetEntity=Users::class)
-     * @ORM\JoinColumn(nullable=false,referencedColumnName="id")
-     */
-    private int $userId;
-
-
 
     public function getId(): ?int
     {
@@ -142,18 +127,6 @@ class Ingredient
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(int $userId): self
-    {
-        $this->userId = $userId;
 
         return $this;
     }

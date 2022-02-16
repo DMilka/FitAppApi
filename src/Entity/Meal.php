@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Core\Database\Autofill\Entity\UserFill;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\MealRepository;
@@ -27,11 +28,15 @@ use App\Repository\MealRepository;
  *          "put"={
  *              "normalization_context"={"groups"={"meal_read"}},
  *              "denormalization_context"={"groups"={"meal_update"}}
- *          },}
+ *          },
+ *          "delete"={
+ *              "denormalization_context"={"groups"={"meal_delete"}}
+ *          }
+ *     }
  * )
  * @ORM\Entity(repositoryClass=MealRepository::class)
  */
-class Meal
+class Meal extends UserFill
 {
     /**
      * @Groups({"meal_read"})
@@ -42,12 +47,6 @@ class Meal
      * @ORM\Column(type="integer", name="id")
      */
     private ?int $id = null;
-
-    /**
-     * @Groups({"meal_write"})
-     * @ORM\Column(type="integer", nullable=false, name="user_id")
-     */
-    private int $userId;
 
     /**
      * @Groups({"meal_read", "meal_write","meal_update"})
@@ -99,24 +98,6 @@ class Meal
     public function setDescription(?string $description): Meal
     {
         $this->description = $description;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getUserId(): int
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param int $userId
-     * @return Meal
-     */
-    public function setUserId(int $userId): Meal
-    {
-        $this->userId = $userId;
         return $this;
     }
 
