@@ -4,10 +4,9 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Core\Database\Autofill\Entity\UserFill;
+use App\Repository\MealToMealSetRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use App\Repository\MealToMealSetRepository;
 
 /**
  * @ApiResource(
@@ -31,7 +30,7 @@ use App\Repository\MealToMealSetRepository;
  * )
  * @ORM\Entity(repositoryClass=MealToMealSetRepository::class)
  */
-class MealToMealSet extends UserFill
+class MealToMealSet
 {
     /**
      * @Groups({"meal_to_meal_set_read"})

@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Core\Database\Autofill\Entity\UserFill;
+use App\Core\Database\HelperEntity\UserExtension;
 use App\Repository\IngredientRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -12,25 +12,34 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *      collectionOperations={
  *          "get"={
+ *              "security"="is_granted('ROLE_INGREDIENT_GET')",
  *              "normalization_context"={"groups"={"ingredient_read"}}
  *          },
  *          "post"={
+ *              "security"="is_granted('ROLE_INGREDIENT_POST')",
  *              "normalization_context"={"groups"={"ingredient_read"}},
  *              "denormalization_context"={"groups"={"ingredient_write"}}
  *          },
  *     },
  *     itemOperations={
  *          "get"={
+ *              "security"="is_granted('ROLE_INGREDIENT_GET')",
  *              "normalization_context"={"groups"={"ingredient_read"}}
  *          },
  *          "put"={
+ *              "security"="is_granted('ROLE_INGREDIENT_PUT')",
  *              "normalization_context"={"groups"={"ingredient_read"}},
  *              "denormalization_context"={"groups"={"ingredient_update"}}
- *          },}
+ *          },
+ *          "delete"={
+ *              "security"="is_granted('ROLE_INGREDIENT_DELETE')",
+ *              "denormalization_context"={"groups"={"ingredient_delete"}}
+ *          }
+ *     }
  * )
  * @ORM\Entity(repositoryClass=IngredientRepository::class)
  */
-class Ingredient extends UserFill
+class Ingredient extends UserExtension
 {
     /**
      * @Groups({"ingredient_read"})
@@ -89,7 +98,7 @@ class Ingredient extends UserFill
     private int $amountTypeId;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @Groups({"ingredient_read"})
      * @ORM\Column(type="integer", nullable=false, name="divider_value")
      */
     private int $dividerValue = 100;

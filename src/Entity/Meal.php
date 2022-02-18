@@ -4,10 +4,10 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Core\Database\Autofill\Entity\UserFill;
+use App\Core\Database\HelperEntity\UserExtension;
+use App\Repository\MealRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use App\Repository\MealRepository;
 
 /**
  * @ApiResource(
@@ -36,7 +36,7 @@ use App\Repository\MealRepository;
  * )
  * @ORM\Entity(repositoryClass=MealRepository::class)
  */
-class Meal extends UserFill
+class Meal extends UserExtension
 {
     /**
      * @Groups({"meal_read"})

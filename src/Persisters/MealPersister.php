@@ -154,7 +154,16 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
 
     public function preRemove($data, $context = []): void {}
 
-    public function overrideRemove($data, $context = []): void {}
+    /**
+     * @param $data Meal
+     * @param $context
+     * @return void
+     */
+    public function overrideRemove($data, $context = []): void {
+        $this->getIngredientToMealRepository()->deleteAllByMealId($data->getId());
+        $this->dbRemove($data);
+        $this->dbFlush();
+    }
 
     public function postRemove($data, $context = []): void {}
 

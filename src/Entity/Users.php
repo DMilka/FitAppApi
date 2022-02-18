@@ -107,12 +107,22 @@ class Users implements UserInterface
 
     public function getRoles()
     {
-        return ['ROLE_USER'];
+        return ['ROLE_USER',
+                'ROLE_INGREDIENT_GET',
+                'ROLE_INGREDIENT_POST',
+                'ROLE_INGREDIENT_GET',
+                'ROLE_INGREDIENT_PUT',
+                'ROLE_INGREDIENT_DELETE',
+                'ROLE_AMOUNT_TYPE_POST',
+                'ROLE_AMOUNT_TYPE_GET',
+                'ROLE_AMOUNT_TYPE_PUT',
+                'ROLE_AMOUNT_TYPE_DELETE'
+        ];
     }
 
     public function getSalt()
     {
-       return null;
+        return null;
     }
 
     public function eraseCredentials()

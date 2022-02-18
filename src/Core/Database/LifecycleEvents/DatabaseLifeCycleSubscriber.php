@@ -2,26 +2,18 @@
 
 namespace App\Core\Database\LifecycleEvents;
 
-use App\Core\Database\Autofill\Entity\UserFill;
+use App\Core\Database\HelperEntity\SoftDelete;
+use App\Core\Database\HelperEntity\UserExtension;
 use App\Core\Helpers\UserHelper;
-use App\Entity\AmountType;
-use App\Entity\Ingredient;
-use App\Entity\Meal;
-use App\Entity\MealSet;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
+use EasyRdf\Literal\Date;
 
 class DatabaseLifeCycleSubscriber implements EventSubscriberInterface
 {
     private UserHelper $userHelper;
-    const FILL_WITH_USER_ID = [
-        AmountType::class,
-        Ingredient::class,
-        Meal::class,
-        MealSet::class,
-    ];
-
 
     public function __construct(UserHelper $userHelper)
     {
@@ -34,7 +26,8 @@ class DatabaseLifeCycleSubscriber implements EventSubscriberInterface
     public function getSubscribedEvents(): array
     {
         return [
-            Events::prePersist
+            Events::prePersist,
+            Events::onFlush
         ];
     }
 
@@ -45,9 +38,31 @@ class DatabaseLifeCycleSubscriber implements EventSubscriberInterface
         $this->checkToFillWithUserId($object);
     }
 
+    public function onFlush(OnFlushEventArgs $args): void
+    {
+        $em = $args->getEntityManager();
+        $uow = $em->getUnitOfWork();
+
+        $toDeletes = $uow->getScheduledEntityDeletions();
+        foreach ($toDeletes as $toDelete) {
+            if ($toDelete instanceof SoftDelete) {
+                $em->clear();
+
+                $className = $em->getClassMetadata(get_class($toDelete))->getName();
+
+                /** @var SoftDelete $upd */
+                $deleteItem = $em->find($className, $toDelete->getId());
+                $deleteItem->setDeleted(true);
+                $deleteItem->setDeletedAt(new \DateTime());
+                $em->flush();
+            }
+        }
+
+    }
+
     private function checkToFillWithUserId($object): void
     {
-        if($object instanceof UserFill) {
+        if ($object instanceof UserExtension) {
             $this->fillWithUserId($object);
         }
     }

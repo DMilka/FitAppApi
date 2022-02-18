@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Core\Database\Autofill\Entity;
+namespace App\Core\Database\HelperEntity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
-class UserFill
+class UserExtension extends SoftDelete
 {
     /**
-     * @Groups({"amount_type_write"})
      * @ORM\Column(type="integer", nullable=false, name="user_id")
      */
     protected int $userId;
@@ -23,9 +21,9 @@ class UserFill
 
     /**
      * @param int $userId
-     * @return UserFill
+     * @return UserExtension
      */
-    public function setUserId(int $userId): UserFill
+    public function setUserId(int $userId): UserExtension
     {
         $this->userId = $userId;
         return $this;

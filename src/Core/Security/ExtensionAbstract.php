@@ -15,7 +15,7 @@ abstract class ExtensionAbstract extends HandlerAbstract implements ExtensionInt
 
     public function __construct(ManagerRegistry $managerRegistry, EventDispatcherInterface $eventDispatcher, UserHelper $userHelper)
     {
-        parent::__construct($managerRegistry, $eventDispatcher);
+        parent::__construct($managerRegistry, $eventDispatcher, $userHelper);
         $this->userHelper = $userHelper;
     }
 
