@@ -6,6 +6,7 @@ use App\Core\Authentication\Event\RegisterEvent;
 use App\Core\Authentication\Handler\RegisterHandler;
 use App\Core\Authentication\Handler\RegisterValidationHandler;
 use App\Core\HandlerAbstract;
+use App\Core\Helpers\UserHelper;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -16,11 +17,11 @@ class RegisterSubscriber extends HandlerAbstract implements EventSubscriberInter
     private ?RegisterHandler $registerHandler = null;
     private ?RegisterValidationHandler $registerValidationHandler = null;
 
-    public function __construct(ManagerRegistry $managerRegistry, EventDispatcherInterface $eventDispatcher)
+    public function __construct(ManagerRegistry $managerRegistry, EventDispatcherInterface $eventDispatcher, UserHelper $userHelper)
     {
-        parent::__construct($managerRegistry, $eventDispatcher);
-        $this->registerHandler = new RegisterHandler($managerRegistry, $eventDispatcher);
-        $this->registerValidationHandler = new RegisterValidationHandler($managerRegistry, $eventDispatcher);
+        parent::__construct($managerRegistry, $eventDispatcher, $userHelper);
+        $this->registerHandler = new RegisterHandler($managerRegistry, $eventDispatcher, $userHelper);
+        $this->registerValidationHandler = new RegisterValidationHandler($managerRegistry, $eventDispatcher, $userHelper);
 
     }
 
