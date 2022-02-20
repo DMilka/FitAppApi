@@ -12,21 +12,30 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *      collectionOperations={
  *          "get"={
+ *              "security"="is_granted('ROLE_MEAL_TO_MEAL_SET_GET')",
  *              "normalization_context"={"groups"={"meal_to_meal_set_read"}}
  *          },
  *          "post"={
+ *              "security"="is_granted('ROLE_MEAL_TO_MEAL_SET_POST')",
  *              "normalization_context"={"groups"={"meal_to_meal_set_read"}},
  *              "denormalization_context"={"groups"={"meal_to_meal_set_write"}}
  *          },
  *     },
  *     itemOperations={
  *          "get"={
+ *              "security"="is_granted('ROLE_MEAL_TO_MEAL_SET_GET')",
  *              "normalization_context"={"groups"={"meal_to_meal_set_read"}}
  *          },
  *          "put"={
+ *              "security"="is_granted('ROLE_MEAL_TO_MEAL_SET_PUT')",
  *              "normalization_context"={"groups"={"meal_to_meal_set_read"}},
  *              "denormalization_context"={"groups"={"meal_to_meal_set_update"}}
- *          },}
+ *          },
+ *          "delete"={
+ *              "security"="is_granted('ROLE_MEAL_TO_MEAL_SET_DELETE')",
+ *              "denormalization_context"={"groups"={"meal_set_delete"}}
+ *          }
+ *     }
  * )
  * @ORM\Entity(repositoryClass=MealToMealSetRepository::class)
  */

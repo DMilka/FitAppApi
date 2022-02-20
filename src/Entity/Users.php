@@ -116,7 +116,23 @@ class Users implements UserInterface
                 'ROLE_AMOUNT_TYPE_POST',
                 'ROLE_AMOUNT_TYPE_GET',
                 'ROLE_AMOUNT_TYPE_PUT',
-                'ROLE_AMOUNT_TYPE_DELETE'
+                'ROLE_AMOUNT_TYPE_DELETE',
+                'ROLE_INGREDIENT_TO_MEAL_POST',
+                'ROLE_INGREDIENT_TO_MEAL_GET',
+                'ROLE_INGREDIENT_TO_MEAL_PUT',
+                'ROLE_INGREDIENT_TO_MEAL_DELETE',
+                'ROLE_MEAL_POST',
+                'ROLE_MEAL_GET',
+                'ROLE_MEAL_PUT',
+                'ROLE_MEAL_DELETE',
+                'ROLE_MEAL_SET_POST',
+                'ROLE_MEAL_SET_GET',
+                'ROLE_MEAL_SET_PUT',
+                'ROLE_MEAL_SET_DELETE',
+                'ROLE_MEAL_TO_MEAL_SET_POST',
+                'ROLE_MEAL_TO_MEAL_SET_GET',
+                'ROLE_MEAL_TO_MEAL_SET_PUT',
+                'ROLE_MEAL_TO_MEAL_SET_DELETE',
         ];
     }
 

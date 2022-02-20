@@ -14,22 +14,27 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     attributes={"security"= "is_granted('ROLE_USER')"},
  *      collectionOperations={
  *          "get"={
+ *              "security"="is_granted('ROLE_MEAL_GET')",
  *              "normalization_context"={"groups"={"meal_read"}}
  *          },
  *          "post"={
+ *              "security"="is_granted('ROLE_MEAL_POST')",
  *              "normalization_context"={"groups"={"meal_read"}},
  *              "denormalization_context"={"groups"={"meal_write"}}
  *          },
  *     },
  *     itemOperations={
  *          "get"={
+ *              "security"="is_granted('ROLE_MEAL_GET')",
  *              "normalization_context"={"groups"={"meal_read"}}
  *          },
  *          "put"={
+ *              "security"="is_granted('ROLE_MEAL_PUT')",
  *              "normalization_context"={"groups"={"meal_read"}},
  *              "denormalization_context"={"groups"={"meal_update"}}
  *          },
  *          "delete"={
+ *               "security"="is_granted('ROLE_MEAL_DELETE')",
  *              "denormalization_context"={"groups"={"meal_delete"}}
  *          }
  *     }

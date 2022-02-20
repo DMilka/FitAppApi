@@ -12,21 +12,30 @@ use App\Repository\IngredientToMealRepository;
  * @ApiResource(
  *      collectionOperations={
  *          "get"={
+ *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
  *              "normalization_context"={"groups"={"ingredient_to_meal_read"}}
  *          },
  *          "post"={
+ *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_POST')",
  *              "normalization_context"={"groups"={"ingredient_to_meal_read"}},
  *              "denormalization_context"={"groups"={"ingredient_to_meal_write"}}
  *          },
  *     },
  *     itemOperations={
  *          "get"={
+ *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
  *              "normalization_context"={"groups"={"ingredient_to_meal_read"}}
  *          },
  *          "put"={
+ *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_PUT')",
  *              "normalization_context"={"groups"={"ingredient_to_meal_read"}},
  *              "denormalization_context"={"groups"={"ingredient_to_meal_update"}}
- *          },}
+ *          },
+ *          "delete"={
+ *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_DELETE')",
+ *              "denormalization_context"={"groups"={"meal_set_delete"}}
+ *          }
+ *     }
  * )
  * @ORM\Entity(repositoryClass=IngredientToMealRepository::class)
  */
