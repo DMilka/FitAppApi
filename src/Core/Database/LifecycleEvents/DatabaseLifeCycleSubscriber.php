@@ -5,6 +5,10 @@ namespace App\Core\Database\LifecycleEvents;
 use App\Core\Database\HelperEntity\SoftDelete;
 use App\Core\Database\HelperEntity\UserExtension;
 use App\Core\Helpers\UserHelper;
+use App\Entity\Ingredient;
+use App\Entity\IngredientToMeal;
+use App\Entity\MealSet;
+use App\Entity\MealToMealSet;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -54,6 +58,19 @@ class DatabaseLifeCycleSubscriber implements EventSubscriberInterface
                 $deleteItem = $em->find($className, $toDelete->getId());
                 $deleteItem->setDeleted(true);
                 $deleteItem->setDeletedAt(new \DateTime());
+                $em->flush();
+            }
+
+            if ($toDelete instanceof Ingredient) {
+                /** @var IngredientToMeal[] $ingredientToMeals */
+                $ingredientToMeals = $em->getRepository(IngredientToMeal::class)->getAllIngredientToMealByIngredient($toDelete->getId());
+
+                $now = new \DateTime();
+                foreach ($ingredientToMeals as $ingredientToMeal) {
+                    $ingredientToMeal->setDeleted(true);
+                    $ingredientToMeal->setDeletedAt($now);
+                }
+
                 $em->flush();
             }
         }

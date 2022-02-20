@@ -20,6 +20,7 @@ class IngredientRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('i')
             ->andWhere('i.id IN (:id)')
+            ->andWhere('itm.deleted = false')
             ->setParameter('id', $ids);
 
         try {

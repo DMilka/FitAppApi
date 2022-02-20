@@ -22,6 +22,7 @@ class IngredientToMealRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('itm')
             ->andWhere('itm.mealId = :id')
+            ->andWhere('itm.deleted = false')
             ->setParameter('id', $meal->getId());
 
         try {
@@ -34,46 +35,39 @@ class IngredientToMealRepository extends ServiceEntityRepository
         return [];
     }
 
-    public function getOneByMealAndIngredientId(Meal $meal, int $ingredientId): ?IngredientToMeal
+    public function getIngredientsForGivenIds(array $ids): array
     {
         $query = $this->createQueryBuilder('itm')
-            ->andWhere('itm.mealId = :id')
-            ->andWhere('itm.ingredientId = :id2')
-            ->setParameter('id', $meal->getId())
-            ->setParameter('id2', $ingredientId);
+            ->andWhere('itm.ingredientId in (:ids)')
+            ->andWhere('itm.deleted = false')
+            ->setParameter('ids', $ids);
 
         try {
-            $result = $query->getQuery()->getOneOrNullResult();
+            $result = $query->getQuery()->getResult();
             return $result;
         } catch (\Exception $e) {
             $this->logCritical($e->getMessage(), __METHOD__);
         }
 
-        return null;
+        return [];
     }
 
-    public function deleteByIngredientIdsAndMealId(array $ingredientIds, int $mealId ): void
+    public function getAllIngredientToMealByIngredient(Ingredient $ingredient): array
     {
-        $ids = implode("," ,$ingredientIds);
-        $sql = "DELETE FROM ingredient_to_meal WHERE ingredient_id IN ($ids) AND meal_id = $mealId";
+        $query = $this->createQueryBuilder('itm')
+            ->andWhere('itm.ingredientId = :id')
+            ->andWhere('itm.deleted = false')
+            ->setParameter('id', $ingredient->getId());
 
         try {
-            $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
-            $stmt->executeStatement();
+            $result = $query->getQuery()->getResult();
+            return $result;
         } catch (\Exception $e) {
             $this->logCritical($e->getMessage(), __METHOD__);
         }
+
+        return [];
     }
 
-    public function deleteAllByMealId(int $mealId): void
-    {
-        $sql = "DELETE FROM ingredient_to_meal WHERE meal_id = $mealId";
 
-        try {
-            $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
-            $stmt->executeStatement();
-        } catch (\Exception $e) {
-            $this->logCritical($e->getMessage(), __METHOD__);
-        }
-    }
 }

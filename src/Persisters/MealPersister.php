@@ -28,15 +28,15 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
      */
     public function persist($data, array $context = []): object
     {
-        return parent::persist($data,$context);
+        return parent::persist($data, $context);
     }
 
     /**
      * @inheritDoc
      */
-    public function remove($data, array $context = []):void
+    public function remove($data, array $context = []): void
     {
-        parent::remove($data,$context);
+        parent::remove($data, $context);
     }
 
     public function prePersist($data, $context = []): void
@@ -65,10 +65,10 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
     {
         $ids = $data->getIngredientIds();
 
-        if($ids) {
+        if ($ids) {
             $ids = json_decode($ids);
-            if(is_array($ids)) {
-                foreach($ids as $id) {
+            if (is_array($ids)) {
+                foreach ($ids as $id) {
                     $ingredientToMeal = new IngredientToMeal();
 
                     $ingredientToMeal->setIngredientId($id);
@@ -82,7 +82,8 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
         }
     }
 
-    public function preUpdate($data, $context = []): void {
+    public function preUpdate($data, $context = []): void
+    {
         $this->checkIfUserHasHisOwnIngredients($data);
     }
 
@@ -97,7 +98,8 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
      * @param $context
      * @return void
      */
-    public function postUpdate($data, $context = []): void {
+    public function postUpdate($data, $context = []): void
+    {
         $oldElements = [];
         $newElements = [];
         $user = $this->getUserHelper()->getUser();
@@ -110,7 +112,7 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
         }
         // Get new elements
         $ids = $data->getIngredientIds();
-        if($ids) {
+        if ($ids) {
             $ids = json_decode($ids);
             if (is_array($ids)) {
                 $newElements = $ids;
@@ -122,7 +124,14 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
         // Elements to add
         $toAdd = ArrayHelper::getNewElementsFromArrays($oldElements, $newElements);
 
-        $this->getIngredientToMealRepository()->deleteByIngredientIdsAndMealId($toDelete, $data->getId());
+        /** @var IngredientToMeal[] $ingredientsToMeal */
+        $ingredientsToMeal = $this->getIngredientToMealRepository()->getIngredientsForGivenIds($toDelete);
+
+        $now = new \DateTime();
+        foreach ($ingredientsToMeal as $item) {
+            $item->setDeleted(true);
+            $item->setDeletedAt($now);
+        }
 
         foreach ($toAdd as $id) {
             if (!is_int($id)) {
@@ -133,12 +142,12 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
         /** @var Ingredient[] $ingredients */
         $ingredients = $this->getIngredientRepository()->getIngredientsByIds($toAdd);
 
-        if(count($ingredients) !== count($toAdd)) {
+        if (count($ingredients) !== count($toAdd)) {
             throw new ItemNotFoundException(ItemNotFoundException::MESSAGE);
         }
 
-        foreach($ingredients as $ingredient) {
-            if($ingredient->getUserId() !== $user->getId()) {
+        foreach ($ingredients as $ingredient) {
+            if ($ingredient->getUserId() !== $user->getId()) {
                 throw new WrongOwnerException(WrongOwnerException::MESSAGE);
             }
 
@@ -152,42 +161,55 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
         $this->dbFlush();
     }
 
-    public function preRemove($data, $context = []): void {}
+    public function preRemove($data, $context = []): void
+    {
+    }
 
     /**
      * @param $data Meal
      * @param $context
      * @return void
      */
-    public function overrideRemove($data, $context = []): void {
-        $this->getIngredientToMealRepository()->deleteAllByMealId($data->getId());
+    public function overrideRemove($data, $context = []): void
+    {
+        /** @var IngredientToMeal[] $ingredientsToMeal */
+        $ingredientsToMeal = $this->getIngredientToMealRepository()->getAllIngredientForGivenMeal($data);
+
+        $now = new \DateTime();
+        foreach ($ingredientsToMeal as $item) {
+            $item->setDeleted(true);
+            $item->setDeletedAt($now);
+        }
+        $this->dbFlush();
         $this->dbRemove($data);
         $this->dbFlush();
     }
 
-    public function postRemove($data, $context = []): void {}
+    public function postRemove($data, $context = []): void
+    {
+    }
 
     private function checkIfUserHasHisOwnIngredients(Meal $data): void
     {
         $ids = $data->getIngredientIds();
 
-        if($ids) {
+        if ($ids) {
             $user = $this->getUserHelper()->getUser();
             $ids = json_decode($ids);
-            if(is_array($ids)) {
-                foreach($ids as $id) {
-                    if(!is_int($id)) {
+            if (is_array($ids)) {
+                foreach ($ids as $id) {
+                    if (!is_int($id)) {
                         throw new WrongValueException(WrongValueException::MESSAGE);
                     }
 
                     /** @var Ingredient $ingredient */
                     $ingredient = $this->getIngredientRepository()->find($id);
 
-                    if(!$ingredient) {
+                    if (!$ingredient) {
                         throw new ItemNotFoundException(ItemNotFoundException::MESSAGE);
                     }
 
-                    if($ingredient->getUserId() !== $user->getId()) {
+                    if ($ingredient->getUserId() !== $user->getId()) {
                         throw new WrongOwnerException(WrongOwnerException::MESSAGE);
                     }
                 }

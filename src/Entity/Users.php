@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Core\Database\HelperEntity\SoftDelete;
 use App\Repository\UsersRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -30,7 +31,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * )
  * @ORM\Entity(repositoryClass=UsersRepository::class)
  */
-class Users implements UserInterface
+class Users extends SoftDelete implements UserInterface
 {
     /**
      * @Groups({"users_read", "users_write"})

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Core\Database\HelperEntity\SoftDelete;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\IngredientToMealRepository;
@@ -39,7 +40,7 @@ use App\Repository\IngredientToMealRepository;
  * )
  * @ORM\Entity(repositoryClass=IngredientToMealRepository::class)
  */
-class IngredientToMeal
+class IngredientToMeal extends SoftDelete
 {
     /**
      * @Groups({"ingredient_to_meal_read"})

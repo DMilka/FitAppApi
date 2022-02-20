@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Core\Database\HelperEntity\SoftDelete;
 use App\Repository\MealToMealSetRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -39,7 +40,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * )
  * @ORM\Entity(repositoryClass=MealToMealSetRepository::class)
  */
-class MealToMealSet
+class MealToMealSet extends SoftDelete
 {
     /**
      * @Groups({"meal_to_meal_set_read"})
