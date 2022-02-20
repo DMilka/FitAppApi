@@ -5,7 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Core\Database\HelperEntity\UserExtension;
-use App\Repository\MealRepository;
+use App\Repository\MealSetRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -38,12 +38,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          }
  *     }
  * )
- * @ORM\Entity(repositoryClass=MealRepository::class)
+ * @ORM\Entity(repositoryClass=MealSetRepository::class)
  */
 class MealSet extends UserExtension
 {
     /**
-     * @Groups({"meal_set_set_read"})
+     * @Groups({"meal_set_read"})
      * @ApiProperty(identifier=true)
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -63,6 +63,11 @@ class MealSet extends UserExtension
      * @ORM\Column(type="string", length=255, name="description")
      */
     private ?string $description = null;
+
+    /**
+     * @Groups({"meal_set_write","meal_set_update"})
+     */
+    private ?string $mealIds = null;
 
     public function getId(): ?int
     {
@@ -96,6 +101,24 @@ class MealSet extends UserExtension
     public function setDescription(?string $description): MealSet
     {
         $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMealIds(): ?string
+    {
+        return $this->mealIds;
+    }
+
+    /**
+     * @param string|null $mealIds
+     * @return MealSet
+     */
+    public function setMealIds(?string $mealIds): MealSet
+    {
+        $this->mealIds = $mealIds;
         return $this;
     }
 }

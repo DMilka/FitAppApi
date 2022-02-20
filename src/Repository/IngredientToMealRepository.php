@@ -35,12 +35,14 @@ class IngredientToMealRepository extends ServiceEntityRepository
         return [];
     }
 
-    public function getIngredientsForGivenIds(array $ids): array
+    public function getIngredientsForGivenIngredientIdsAndMeal(Meal $meal, array $ids): array
     {
         $query = $this->createQueryBuilder('itm')
             ->andWhere('itm.ingredientId in (:ids)')
+            ->andWhere('itm.mealId = :mealId')
             ->andWhere('itm.deleted = false')
-            ->setParameter('ids', $ids);
+            ->setParameter('ids', $ids)
+            ->setParameter('mealId', $meal->getId());
 
         try {
             $result = $query->getQuery()->getResult();

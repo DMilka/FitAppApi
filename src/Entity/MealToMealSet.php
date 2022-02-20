@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Core\Database\HelperEntity\SoftDelete;
 use App\Repository\MealToMealSetRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -64,6 +65,14 @@ class MealToMealSet extends SoftDelete
      */
     private int $mealId;
 
+    /**
+     * @ApiSubresource
+     * @Groups({"meal_to_meal_set_read", "meal_to_meal_set_write","meal_to_meal_set_update"})
+     * @ORM\OneToOne(targetEntity="Meal")
+     * @ORM\JoinColumn(name="meal_id",referencedColumnName="id")
+     */
+    private ?Meal $meal = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,4 +113,24 @@ class MealToMealSet extends SoftDelete
         $this->mealId = $mealId;
         return $this;
     }
+
+    /**
+     * @return Meal|null
+     */
+    public function getMeal(): ?Meal
+    {
+        return $this->meal;
+    }
+
+    /**
+     * @param Meal|null $meal
+     * @return MealToMealSet
+     */
+    public function setMeal(?Meal $meal): MealToMealSet
+    {
+        $this->meal = $meal;
+        return $this;
+    }
+
+
 }

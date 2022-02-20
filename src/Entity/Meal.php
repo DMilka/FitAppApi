@@ -54,13 +54,13 @@ class Meal extends UserExtension
     private ?int $id = null;
 
     /**
-     * @Groups({"meal_read", "meal_write","meal_update"})
+     * @Groups({"meal_read", "meal_write","meal_update","meal_to_meal_set_read"})
      * @ORM\Column(type="string", length=255, name="name")
      */
     private string $name;
 
     /**
-     * @Groups({"meal_read", "meal_write","meal_update"})
+     * @Groups({"meal_read", "meal_write","meal_update","meal_to_meal_set_read"})
      * @ORM\Column(type="string", length=255, name="description")
      */
     private ?string $description = null;
