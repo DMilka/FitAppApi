@@ -7,12 +7,6 @@ use App\Entity\Users;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @method Users|null find($id, $lockMode = null, $lockVersion = null)
- * @method Users|null findOneBy(array $criteria, array $orderBy = null)
- * @method Users[]    findAll()
- * @method Users[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
 class UsersRepository extends ServiceEntityRepository
 {
     use LoggerTrait;
@@ -26,6 +20,7 @@ class UsersRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('u')
             ->andWhere('u.username = :name')
+            ->andWhere('itm.deleted = false')
             ->setParameter('name', $name)
             ->setMaxResults(1);
 
@@ -38,10 +33,12 @@ class UsersRepository extends ServiceEntityRepository
 
         return null;
     }
+
     public function findOneOrNullByEmail(string $email): ?Users
     {
         $query = $this->createQueryBuilder('u')
             ->andWhere('u.email = :email')
+            ->andWhere('itm.deleted = false')
             ->setParameter('email', $email)
             ->setMaxResults(1);
 

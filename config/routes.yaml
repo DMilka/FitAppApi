@@ -2,10 +2,11 @@
 #    path: /
 #    controller: App\Controller\DefaultController::index
 
-authentication_token:
+login:
   path: /api/login
   methods: ['POST']
 
 register:
   path: /api/register
+  methods: ['POST']
   controller: App\Core\Authentication\RegisterController::onRegister

@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use App\Core\Database\HelperEntity\SoftDelete;
 use App\Repository\UsersRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use App\Auth\RegisterController;
+use App\Core\Authentication\RegisterController;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource(
+ * ApiResource(
  *      collectionOperations={
  *          "get"={
  *              "normalization_context"={"groups"={"users_read"}}
@@ -30,9 +30,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     }
  * )
  * @ORM\Entity(repositoryClass=UsersRepository::class)
- * @method string getUserIdentifier()
  */
-class Users implements UserInterface
+class Users extends SoftDelete implements UserInterface
 {
     /**
      * @Groups({"users_read", "users_write"})
@@ -109,12 +108,38 @@ class Users implements UserInterface
 
     public function getRoles()
     {
-        return ['ROLE_USER'];
+        return ['ROLE_USER',
+                'ROLE_INGREDIENT_GET',
+                'ROLE_INGREDIENT_POST',
+                'ROLE_INGREDIENT_GET',
+                'ROLE_INGREDIENT_PUT',
+                'ROLE_INGREDIENT_DELETE',
+                'ROLE_AMOUNT_TYPE_POST',
+                'ROLE_AMOUNT_TYPE_GET',
+                'ROLE_AMOUNT_TYPE_PUT',
+                'ROLE_AMOUNT_TYPE_DELETE',
+                'ROLE_INGREDIENT_TO_MEAL_POST',
+                'ROLE_INGREDIENT_TO_MEAL_GET',
+                'ROLE_INGREDIENT_TO_MEAL_PUT',
+                'ROLE_INGREDIENT_TO_MEAL_DELETE',
+                'ROLE_MEAL_POST',
+                'ROLE_MEAL_GET',
+                'ROLE_MEAL_PUT',
+                'ROLE_MEAL_DELETE',
+                'ROLE_MEAL_SET_POST',
+                'ROLE_MEAL_SET_GET',
+                'ROLE_MEAL_SET_PUT',
+                'ROLE_MEAL_SET_DELETE',
+                'ROLE_MEAL_TO_MEAL_SET_POST',
+                'ROLE_MEAL_TO_MEAL_SET_GET',
+                'ROLE_MEAL_TO_MEAL_SET_PUT',
+                'ROLE_MEAL_TO_MEAL_SET_DELETE',
+        ];
     }
 
     public function getSalt()
     {
-       return null;
+        return null;
     }
 
     public function eraseCredentials()
@@ -125,5 +150,11 @@ class Users implements UserInterface
     public function __call($name, $arguments)
     {
         // TODO: Implement @method string getUserIdentifier()
+    }
+
+    public function getUserIdentifier(): string
+    {
+        // TODO: Implement getUserIdentifier() method.
+        return '';
     }
 }

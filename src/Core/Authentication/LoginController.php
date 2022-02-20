@@ -35,7 +35,7 @@ class LoginController
         /** @var Users $user */
         $user = $event->getUser();
 
-        $data[AuthenticationHelper::LOGIN] = $user->getId();
+        $data[AuthenticationHelper::LOGIN] = $user->getUsername();
 
         $event->setData($data);
     }

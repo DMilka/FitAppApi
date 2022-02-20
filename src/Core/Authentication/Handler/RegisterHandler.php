@@ -18,8 +18,8 @@ class RegisterHandler extends HandlerAbstract
         $user->setPassword(password_hash($params[AuthenticationHelper::PASSWORD],self::REGISTER_PASSWORD_ALGO , ['cost' => self::REGISTER_COST]));
         $user->setUsername(htmlspecialchars($params[AuthenticationHelper::LOGIN]));
 
-        $this->persist($user);
-        $this->flush();
+        $this->dbPersist($user);
+        $this->dbFlush();
 
         return $user;
     }
