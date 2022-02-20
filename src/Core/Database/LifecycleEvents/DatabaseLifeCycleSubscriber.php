@@ -60,19 +60,6 @@ class DatabaseLifeCycleSubscriber implements EventSubscriberInterface
                 $deleteItem->setDeletedAt(new \DateTime());
                 $em->flush();
             }
-
-            if ($toDelete instanceof Ingredient) {
-                /** @var IngredientToMeal[] $ingredientToMeals */
-                $ingredientToMeals = $em->getRepository(IngredientToMeal::class)->getAllIngredientToMealByIngredient($toDelete->getId());
-
-                $now = new \DateTime();
-                foreach ($ingredientToMeals as $ingredientToMeal) {
-                    $ingredientToMeal->setDeleted(true);
-                    $ingredientToMeal->setDeletedAt($now);
-                }
-
-                $em->flush();
-            }
         }
 
     }

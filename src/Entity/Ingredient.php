@@ -50,55 +50,55 @@ class Ingredient extends UserExtension
     private int $id;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
      * @ORM\Column(type="string", length=255, name="name")
      */
     private string $name;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
      * @ORM\Column(type="string", length=255, nullable=true, name="description")
      */
     private ?string $description = null;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
      * @ORM\Column(type="integer", name="amount")
      */
     private ?int $amount = null;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
      * @ORM\Column(type="integer", nullable=true, name="protein")
      */
     private ?int $protein = null;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
      * @ORM\Column(type="integer", nullable=true, name="carbohydrate")
      */
     private ?int $carbohydrate = null;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
      * @ORM\Column(type="integer", nullable=true, name="fat")
      */
     private ?int $fat = null;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
      * @ORM\Column(type="integer", nullable=true, name="calorie")
      */
     private ?int $calorie = null;
 
     /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update"})
+     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
      * @ORM\Column(type="integer", nullable=false, name="amount_type_id")
      */
     private int $amountTypeId;
 
     /**
-     * @Groups({"ingredient_read"})
+     * @Groups({"ingredient_read","ingredient_to_meal_read"})
      * @ORM\Column(type="integer", nullable=false, name="divider_value")
      */
     private int $dividerValue = 100;
@@ -155,24 +155,6 @@ class Ingredient extends UserExtension
     public function setAmountTypeId(int $amountTypeId): Ingredient
     {
         $this->amountTypeId = $amountTypeId;
-        return $this;
-    }
-
-    /**
-     * @return AmountType
-     */
-    public function getAmountType(): AmountType
-    {
-        return $this->amountType;
-    }
-
-    /**
-     * @param AmountType $amountType
-     * @return Ingredient
-     */
-    public function setAmountType(AmountType $amountType): Ingredient
-    {
-        $this->amountType = $amountType;
         return $this;
     }
 
@@ -283,5 +265,6 @@ class Ingredient extends UserExtension
         $this->dividerValue = $dividerValue;
         return $this;
     }
+
 
 }

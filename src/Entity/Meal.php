@@ -66,7 +66,7 @@ class Meal extends UserExtension
     private ?string $description = null;
 
     /**
-     * @Groups({"meal_read", "meal_write","meal_update"})
+     * @Groups({"meal_write","meal_update"})
      */
     private ?string $ingredientIds = null;
 

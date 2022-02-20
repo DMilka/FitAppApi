@@ -69,8 +69,14 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
             $ids = json_decode($ids);
             if (is_array($ids)) {
                 foreach ($ids as $id) {
-                    $ingredientToMeal = new IngredientToMeal();
+                    $ingredient = $this->getIngredientRepository()->find($id);
 
+                    if (!$ingredient) {
+                        throw new ItemNotFoundException(ItemNotFoundException::INGREDIENT_NOT_FOUND_MESSAGE);
+                    }
+                    
+                    $ingredientToMeal = new IngredientToMeal();
+                    $ingredientToMeal->setIngredient($ingredient);
                     $ingredientToMeal->setIngredientId($id);
                     $ingredientToMeal->setMealId($data->getId());
 
@@ -207,6 +213,10 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
 
                     if (!$ingredient) {
                         throw new ItemNotFoundException(ItemNotFoundException::MESSAGE);
+                    }
+
+                    if ($ingredient->getDeletedAt() && $ingredient->getDeleted()) {
+                        throw new ItemNotFoundException(ItemNotFoundException::INGREDIENT_NOT_FOUND_MESSAGE);
                     }
 
                     if ($ingredient->getUserId() !== $user->getId()) {

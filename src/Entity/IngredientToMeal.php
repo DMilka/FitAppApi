@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Core\Database\HelperEntity\SoftDelete;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -15,26 +16,12 @@ use App\Repository\IngredientToMealRepository;
  *          "get"={
  *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
  *              "normalization_context"={"groups"={"ingredient_to_meal_read"}}
- *          },
- *          "post"={
- *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_POST')",
- *              "normalization_context"={"groups"={"ingredient_to_meal_read"}},
- *              "denormalization_context"={"groups"={"ingredient_to_meal_write"}}
- *          },
+ *          }
  *     },
  *     itemOperations={
  *          "get"={
  *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
  *              "normalization_context"={"groups"={"ingredient_to_meal_read"}}
- *          },
- *          "put"={
- *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_PUT')",
- *              "normalization_context"={"groups"={"ingredient_to_meal_read"}},
- *              "denormalization_context"={"groups"={"ingredient_to_meal_update"}}
- *          },
- *          "delete"={
- *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_DELETE')",
- *              "denormalization_context"={"groups"={"meal_set_delete"}}
  *          }
  *     }
  * )
@@ -57,6 +44,14 @@ class IngredientToMeal extends SoftDelete
      * @ORM\Column(type="integer",  name="ingredient_id", nullable=false)
      */
     private int $ingredientId;
+
+    /**
+     * @ApiSubresource
+     * @Groups({"ingredient_to_meal_read", "ingredient_to_meal_write","ingredient_to_meal_update"})
+     * @ORM\OneToOne(targetEntity="Ingredient")
+     * @ORM\JoinColumn(name="ingredient_id",referencedColumnName="id")
+     */
+    private ?Ingredient $ingredient = null;
 
     /**
      * @Groups({"ingredient_to_meal_read", "ingredient_to_meal_write","ingredient_to_meal_update"})
@@ -104,4 +99,24 @@ class IngredientToMeal extends SoftDelete
         $this->mealId = $mealId;
         return $this;
     }
+
+    /**
+     * @return Ingredient|null
+     */
+    public function getIngredient(): ?Ingredient
+    {
+        return $this->ingredient;
+    }
+
+    /**
+     * @param Ingredient|null $ingredient
+     * @return IngredientToMeal
+     */
+    public function setIngredient(?Ingredient $ingredient): IngredientToMeal
+    {
+        $this->ingredient = $ingredient;
+        return $this;
+    }
+
+
 }
