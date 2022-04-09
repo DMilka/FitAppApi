@@ -8,6 +8,8 @@ use App\Core\Database\HelperEntity\UserExtension;
 use App\Repository\MealSetRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiResource(
@@ -39,6 +41,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     }
  * )
  * @ORM\Entity(repositoryClass=MealSetRepository::class)
+ * @ApiFilter(SearchFilter::class, properties={"name": "ipartial", "description": "ipartial"})
  */
 class MealSet extends UserExtension
 {
