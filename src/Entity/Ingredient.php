@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Core\Database\HelperEntity\UserExtension;
 use App\Repository\IngredientRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
 
 /**
  * @ApiResource(
@@ -38,6 +41,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     }
  * )
  * @ORM\Entity(repositoryClass=IngredientRepository::class)
+ * @ApiFilter(SearchFilter::class, properties={"name": "ipartial", "description": "ipartial"})
+ * @ApiFilter(NumericFilter::class, properties={"amount","protein","carbohydrate","fat","calorie"})
  */
 class Ingredient extends UserExtension
 {
