@@ -28,7 +28,7 @@ class Extension implements QueryCollectionExtensionInterface, QueryItemExtension
         $this->security = $security;
     }
 
-    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null)
+    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null, array $context = [])
     {
         if (strpos($resourceClass, self::ENTITY_PATH) === false) {
             return;
@@ -44,7 +44,7 @@ class Extension implements QueryCollectionExtensionInterface, QueryItemExtension
         if (class_exists($className)) {
             /** @var ExtensionInterface $object */
             $object = $this->container->get($className);
-            $object->prepareQueryForCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName);
+            $object->prepareQueryForCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
         }
 
     }
@@ -65,7 +65,7 @@ class Extension implements QueryCollectionExtensionInterface, QueryItemExtension
         if (class_exists($className)) {
             /** @var ExtensionInterface $object */
             $object = $this->container->get($className);
-            $object->prepareQueryForItem($queryBuilder, $queryNameGenerator, $resourceClass, $operationName);
+            $object->prepareQueryForItem($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
         }
     }
 }
