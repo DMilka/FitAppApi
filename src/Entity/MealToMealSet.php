@@ -9,6 +9,8 @@ use App\Core\Database\HelperEntity\SoftDelete;
 use App\Repository\MealToMealSetRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
 
 /**
  * @ApiResource(
@@ -40,6 +42,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     }
  * )
  * @ORM\Entity(repositoryClass=MealToMealSetRepository::class)
+ * @ApiFilter(NumericFilter::class, properties={"mealSetId"})
  */
 class MealToMealSet extends SoftDelete
 {

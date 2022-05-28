@@ -3,7 +3,6 @@
 namespace App\Persisters;
 
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
-use App\Core\Exceptions\StandardExceptions\AmountTypeNotFound;
 use App\Core\Exceptions\StandardExceptions\ItemNotFoundException;
 use App\Entity\AmountType;
 use App\Entity\Ingredient;
@@ -105,7 +104,7 @@ class IngredientPersister extends DataPersisterExtension implements ContextAware
         $amountTypeId = $data->getAmountTypeId();
 
         /** @var AmountType $amountType */
-        $amountType = $this->getAmountTypeRepository()->find($amountTypeId);
+        $amountType = $this->getAmountTypeRepository()->findNotDeleted($amountTypeId);
 
         $userId = $this->getUserHelper()->getUser()->getId();
 
