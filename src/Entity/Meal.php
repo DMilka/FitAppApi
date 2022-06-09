@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Core\Database\EntityTraits\EntityConnectorCreatorTrait;
 use App\Core\Database\HelperEntity\UserExtension;
 use App\Repository\MealRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -48,6 +49,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
  */
 class Meal extends UserExtension
 {
+    use EntityConnectorCreatorTrait;
+
     /**
      * @Groups({"meal_read"})
      * @ApiProperty(identifier=true)
