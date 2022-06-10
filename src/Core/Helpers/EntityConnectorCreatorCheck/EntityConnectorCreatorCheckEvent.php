@@ -8,7 +8,8 @@ class EntityConnectorCreatorCheckEvent extends Event
 {
     private bool $isEntitySupportTrait = false;
     private object $parentEntity;
-    private array $decodedElementsEntityList;
+    private ?array $childEntityElements = null;
+    private ?string $childEntityName = null;
 
     public function __construct(object $parentEntity)
     {
@@ -52,20 +53,38 @@ class EntityConnectorCreatorCheckEvent extends Event
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getDecodedElementsEntityList(): array
+    public function getChildEntityElements(): ?array
     {
-        return $this->decodedElementsEntityList;
+        return $this->childEntityElements;
     }
 
     /**
-     * @param array $decodedElementsEntityList
+     * @param array|null $childEntityElements
      * @return EntityConnectorCreatorCheckEvent
      */
-    public function setDecodedElementsEntityList(array $decodedElementsEntityList): EntityConnectorCreatorCheckEvent
+    public function setChildEntityElements(?array $childEntityElements): EntityConnectorCreatorCheckEvent
     {
-        $this->decodedElementsEntityList = $decodedElementsEntityList;
+        $this->childEntityElements = $childEntityElements;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getChildEntityName(): ?string
+    {
+        return $this->childEntityName;
+    }
+
+    /**
+     * @param string|null $childEntityName
+     * @return EntityConnectorCreatorCheckEvent
+     */
+    public function setChildEntityName(?string $childEntityName): EntityConnectorCreatorCheckEvent
+    {
+        $this->childEntityName = $childEntityName;
         return $this;
     }
 }
