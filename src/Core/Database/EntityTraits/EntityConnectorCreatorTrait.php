@@ -2,26 +2,28 @@
 
 namespace App\Core\Database\EntityTraits;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * @ApiResource(
+ *     attributes={"security"= "is_granted('ROLE_ENTITY_CONNECTOR_CREATOR')"},
+ *      collectionOperations={
+ *          "post"={
+ *              "security"="is_granted('ROLE_ENTITY_CONNECTOR_CREATOR_POST')",
+ *              "normalization_context"={"groups"={"entity_connector_creator_read"}},
+ *              "denormalization_context"={"groups"={"entity_connector_creator_write"}}
+ *          },
+ *     },
+ *     itemOperations={}
+ * )
+ */
 trait EntityConnectorCreatorTrait
 {
-    private ?string $entityName;
+    /**
+     * @Groups({"entity_connector_creator_read","entity_connector_creator_write"})
+     */
     private ?string $connectorItems;
-
-    /**
-     * @return string|null
-     */
-    public function getEntityName(): ?string
-    {
-        return $this->entityName;
-    }
-
-    /**
-     * @param string|null $entityName
-     */
-    public function setEntityName(?string $entityName): void
-    {
-        $this->entityName = $entityName;
-    }
 
     /**
      * @return string|null

@@ -8,30 +8,15 @@ class EntityConnectorCreatorCheckEvent extends Event
 {
     private bool $isEntitySupportTrait = false;
     private object $parentEntity;
-    private ?array $childEntityElements = null;
-    private ?string $childEntityName = null;
+    private ?array $connectorClassElements = null;
+    private string $connectorClassName;
+    private array $createdElements;
 
-    public function __construct(object $parentEntity)
+
+    public function __construct(object $parentEntity, string $connectorClassName)
     {
         $this->parentEntity = $parentEntity;
-    }
-
-    /**
-     * @return object
-     */
-    public function getParentEntity(): object
-    {
-        return $this->parentEntity;
-    }
-
-    /**
-     * @param object $parentEntity
-     * @return EntityConnectorCreatorCheckEvent
-     */
-    public function setParentEntity(object $parentEntity): EntityConnectorCreatorCheckEvent
-    {
-        $this->parentEntity = $parentEntity;
-        return $this;
+        $this->connectorClassName = $connectorClassName;
     }
 
     /**
@@ -53,38 +38,74 @@ class EntityConnectorCreatorCheckEvent extends Event
     }
 
     /**
-     * @return array|null
+     * @return object
      */
-    public function getChildEntityElements(): ?array
+    public function getParentEntity(): object
     {
-        return $this->childEntityElements;
+        return $this->parentEntity;
     }
 
     /**
-     * @param array|null $childEntityElements
+     * @param object $parentEntity
      * @return EntityConnectorCreatorCheckEvent
      */
-    public function setChildEntityElements(?array $childEntityElements): EntityConnectorCreatorCheckEvent
+    public function setParentEntity(object $parentEntity): EntityConnectorCreatorCheckEvent
     {
-        $this->childEntityElements = $childEntityElements;
+        $this->parentEntity = $parentEntity;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return array|null
      */
-    public function getChildEntityName(): ?string
+    public function getConnectorClassElements(): ?array
     {
-        return $this->childEntityName;
+        return $this->connectorClassElements;
     }
 
     /**
-     * @param string|null $childEntityName
+     * @param array|null $connectorClassElements
      * @return EntityConnectorCreatorCheckEvent
      */
-    public function setChildEntityName(?string $childEntityName): EntityConnectorCreatorCheckEvent
+    public function setConnectorClassElements(?array $connectorClassElements): EntityConnectorCreatorCheckEvent
     {
-        $this->childEntityName = $childEntityName;
+        $this->connectorClassElements = $connectorClassElements;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConnectorClassName(): string
+    {
+        return $this->connectorClassName;
+    }
+
+    /**
+     * @param string $connectorClassName
+     * @return EntityConnectorCreatorCheckEvent
+     */
+    public function setConnectorClassName(string $connectorClassName): EntityConnectorCreatorCheckEvent
+    {
+        $this->connectorClassName = $connectorClassName;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCreatedElements(): array
+    {
+        return $this->createdElements;
+    }
+
+    /**
+     * @param array $createdElements
+     * @return EntityConnectorCreatorCheckEvent
+     */
+    public function setCreatedElements(array $createdElements): EntityConnectorCreatorCheckEvent
+    {
+        $this->createdElements = $createdElements;
         return $this;
     }
 }

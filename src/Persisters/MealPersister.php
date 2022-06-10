@@ -8,6 +8,7 @@ use App\Core\Exceptions\StandardExceptions\ItemNotFoundException;
 use App\Core\Exceptions\StandardExceptions\WrongOwnerException;
 use App\Core\Exceptions\StandardExceptions\WrongValueException;
 use App\Core\Helpers\ArrayHelper;
+use App\Core\Helpers\EntityConnectorCreatorCheck\EntityConnectorCreatorCheckEvent;
 use App\Entity\Ingredient;
 use App\Entity\IngredientToMeal;
 use App\Entity\Meal;
@@ -63,28 +64,33 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
      */
     public function postPersist($data, $context = []): void
     {
-        $ids = $data->getIngredientIds();
+        $entityConnectorEvent = new EntityConnectorCreatorCheckEvent($data, IngredientToMeal::class);
 
-        if ($ids) {
-            $ids = json_decode($ids);
-            if (is_array($ids)) {
-                foreach ($ids as $id) {
-                    $ingredient = $this->getIngredientRepository()->find($id);
+        $this->getEventDispatcher()->dispatch($entityConnectorEvent);
 
-                    if (!$ingredient) {
-                        throw new ItemNotFoundException(ItemNotFoundException::INGREDIENT_NOT_FOUND_MESSAGE);
+        /** @var IngredientToMeal[] $createdElements */
+        $createdElements = $entityConnectorEvent->getCreatedElements();
+
+        if (count($createdElements) > 0) {
+            $userId = $this->getUserHelper()->getUser()->getId();
+            foreach ($createdElements as $ingredientToMeal) {
+                /** @var Ingredient $ingredient */
+                $ingredient = $this->getIngredientRepository()->find($ingredientToMeal->getIngredientId());
+
+                if ($ingredient) {
+                    if ($ingredient->getUserId() === $userId) {
+                        $ingredientToMeal->setIngredient($ingredient);
+                        $ingredientToMeal->setMealId($data->getId());
+
+                        $this->dbPersist($ingredientToMeal);
+                    } else {
+                        throw new WrongValueException(WrongValueException::MESSAGE);
                     }
-
-                    $ingredientToMeal = new IngredientToMeal();
-                    $ingredientToMeal->setIngredient($ingredient);
-                    $ingredientToMeal->setIngredientId($id);
-                    $ingredientToMeal->setMealId($data->getId());
-
-                    $this->dbPersist($ingredientToMeal);
+                } else {
+                    throw new ItemNotFoundException(ItemNotFoundException::MESSAGE);
                 }
-
-                $this->dbFlush();
             }
+            $this->dbFlush();
         }
     }
 
@@ -116,12 +122,17 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
         foreach ($assignedIngredients as $assignedIngredient) {
             $oldElements[] = $assignedIngredient->getIngredientId();
         }
+
         // Get new elements
-        $ids = $data->getIngredientIds();
-        if ($ids) {
-            $ids = json_decode($ids);
-            if (is_array($ids)) {
-                $newElements = $ids;
+        $entityConnectorEvent = new EntityConnectorCreatorCheckEvent($data, IngredientToMeal::class);
+        $this->getEventDispatcher()->dispatch($entityConnectorEvent);
+
+        /** @var IngredientToMeal[] $createdElements */
+        $createdElements = $entityConnectorEvent->getCreatedElements();
+
+        if (count($createdElements) > 0) {
+            foreach ($createdElements as $ingredientToMeal) {
+                $newElements[] = $ingredientToMeal->getIngredientId();
             }
         }
 
@@ -197,36 +208,7 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
 
     private function checkIfUserHasHisOwnIngredients(Meal $data): void
     {
-        $ids = $data->getIngredientIds();
 
-        if ($ids) {
-            $user = $this->getUserHelper()->getUser();
-            $ids = json_decode($ids);
-            if (is_array($ids)) {
-                foreach ($ids as $id) {
-                    if (!is_int($id)) {
-                        throw new WrongValueException(WrongValueException::MESSAGE);
-                    }
-
-                    /** @var Ingredient $ingredient */
-                    $ingredient = $this->getIngredientRepository()->find($id);
-
-                    if (!$ingredient) {
-                        throw new ItemNotFoundException(ItemNotFoundException::MESSAGE);
-                    }
-
-                    if ($ingredient->getDeletedAt() && $ingredient->getDeleted()) {
-                        throw new ItemNotFoundException(ItemNotFoundException::INGREDIENT_NOT_FOUND_MESSAGE);
-                    }
-
-                    if ($ingredient->getUserId() !== $user->getId()) {
-                        throw new WrongOwnerException(WrongOwnerException::MESSAGE);
-                    }
-                }
-            } else {
-                throw new WrongValueException(WrongValueException::MESSAGE);
-            }
-        }
     }
 
 }

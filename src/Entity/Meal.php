@@ -23,8 +23,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
  *          },
  *          "post"={
  *              "security"="is_granted('ROLE_MEAL_POST')",
- *              "normalization_context"={"groups"={"meal_read"}},
- *              "denormalization_context"={"groups"={"meal_write"}}
+ *              "normalization_context"={"groups"={"meal_read","entity_connector_creator_read"}},
+ *              "denormalization_context"={"groups"={"meal_write","entity_connector_creator_write"}}
  *          },
  *     },
  *     itemOperations={
@@ -73,12 +73,6 @@ class Meal extends UserExtension
      */
     private ?string $description = null;
 
-    /**
-     * @Groups({"meal_write","meal_update"})
-     */
-    private ?string $ingredientIds = null;
-
-
     public function getId(): ?int
     {
         return $this->id;
@@ -111,24 +105,6 @@ class Meal extends UserExtension
     public function setDescription(?string $description): Meal
     {
         $this->description = $description;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getIngredientIds(): ?string
-    {
-        return $this->ingredientIds;
-    }
-
-    /**
-     * @param string|null $ingredientIds
-     * @return Meal
-     */
-    public function setIngredientIds(?string $ingredientIds): Meal
-    {
-        $this->ingredientIds = $ingredientIds;
         return $this;
     }
 }

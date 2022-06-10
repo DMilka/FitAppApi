@@ -35,4 +35,33 @@ class ClassCastHelper
         }
         return $destination;
     }
+
+    public static function getClassNameSpace(string $className): ?string
+    {
+        try {
+            $class = new \ReflectionClass($className);
+            $classNameSpace = $class->getNamespaceName();
+
+            if ($classNameSpace) {
+                return $classNameSpace;
+            }
+        } catch (\Exception $exception) {
+            throw new $exception;
+        }
+
+        return null;
+    }
+
+    public static function getEntitySetter(string $className, string $propertyName): ?string
+    {
+        if (class_exists($className)) {
+            if (property_exists($className, $propertyName)) {
+                if (method_exists($className, 'set' . ucfirst($propertyName))) {
+                    return 'set' . ucfirst($propertyName);
+                }
+            }
+        }
+
+        return null;
+    }
 }

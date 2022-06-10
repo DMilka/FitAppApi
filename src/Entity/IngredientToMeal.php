@@ -62,6 +62,12 @@ class IngredientToMeal extends SoftDelete
      */
     private int $mealId;
 
+    /**
+     * @Groups({"ingredient_to_meal_read", "ingredient_to_meal_write","ingredient_to_meal_update"})
+     * @ORM\Column(type="integer", name="amount", nullable=false)
+     */
+    private int $amount = 0;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,5 +127,21 @@ class IngredientToMeal extends SoftDelete
         return $this;
     }
 
+    /**
+     * @return int
+     */
+    public function getAmount(): int
+    {
+        return $this->amount;
+    }
 
+    /**
+     * @param int $amount
+     * @return IngredientToMeal
+     */
+    public function setAmount(int $amount): IngredientToMeal
+    {
+        $this->amount = $amount;
+        return $this;
+    }
 }

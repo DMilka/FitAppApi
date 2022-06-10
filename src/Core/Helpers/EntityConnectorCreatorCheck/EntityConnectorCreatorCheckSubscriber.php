@@ -46,11 +46,6 @@ class EntityConnectorCreatorCheckSubscriber extends HandlerAbstract implements E
         /** @var EntityConnectorCreatorTrait $parentEntity */
         $parentEntity = $entityConnectorCreatorCheckEvent->getParentEntity();
 
-        if (!$parentEntity->getEntityName()) {
-            throw new NoEntityConnectorNameException(NoEntityConnectorNameException::MESSAGE, NoEntityConnectorNameException::CODE);
-        } else {
-            $entityConnectorCreatorCheckEvent->setChildEntityName($parentEntity->getEntityName());
-        }
 
         if (!$parentEntity->getConnectorItems()) {
             throw new NoEntityConnectorElementsException(NoEntityConnectorElementsException::MESSAGE, NoEntityConnectorElementsException::CODE);
@@ -59,11 +54,9 @@ class EntityConnectorCreatorCheckSubscriber extends HandlerAbstract implements E
             if (!is_array($parsedEntityElements)) {
                 throw new InvalidElementValueException(InvalidElementValueException::MESSAGE, InvalidElementValueException::CODE);
             } else {
-                $entityConnectorCreatorCheckEvent->setChildEntityElements($parsedEntityElements);
+                $entityConnectorCreatorCheckEvent->setConnectorClassElements($parsedEntityElements);
             }
         }
-
-
     }
 
     public function createElementsAndSaveToDb(EntityConnectorCreatorCheckEvent $entityConnectorCreatorCheckEvent): void
@@ -72,15 +65,20 @@ class EntityConnectorCreatorCheckSubscriber extends HandlerAbstract implements E
             return;
         }
 
-        if ($entityConnectorCreatorCheckEvent->getChildEntityName() && count($entityConnectorCreatorCheckEvent->getChildEntityElements()) > 0) {
+        if ($entityConnectorCreatorCheckEvent->getConnectorClassName() && count($entityConnectorCreatorCheckEvent->getConnectorClassElements()) > 0) {
             try {
-                foreach ($entityConnectorCreatorCheckEvent->getChildEntityElements() as $element) {
-                    if (is_object($element)) {
-                        $entityName = $entityConnectorCreatorCheckEvent->getChildEntityName();
+                $entityName = $entityConnectorCreatorCheckEvent->getConnectorClassName();
+                $createdElements = [];
 
+                foreach ($entityConnectorCreatorCheckEvent->getConnectorClassElements() as $element) {
+                    if (is_object($element)) {
                         $entity = ClassCastHelper::cast($entityName, $element);
+
+                        $createdElements[] = $entity;
                     }
                 }
+
+                $entityConnectorCreatorCheckEvent->setCreatedElements($createdElements);
             } catch (\Exception $exception) {
                 throw new $exception;
             }
