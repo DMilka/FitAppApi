@@ -35,25 +35,6 @@ class IngredientToMealRepository extends ServiceEntityRepository
         return [];
     }
 
-    public function getIngredientsForGivenIngredientIdsAndMeal(Meal $meal, array $ids): array
-    {
-        $query = $this->createQueryBuilder('itm')
-            ->andWhere('itm.ingredientId in (:ids)')
-            ->andWhere('itm.mealId = :mealId')
-            ->andWhere('itm.deleted = false')
-            ->setParameter('ids', $ids)
-            ->setParameter('mealId', $meal->getId());
-
-        try {
-            $result = $query->getQuery()->getResult();
-            return $result;
-        } catch (\Exception $e) {
-            $this->logCritical($e->getMessage(), __METHOD__);
-        }
-
-        return [];
-    }
-
     public function getAllIngredientToMealByIngredient(Ingredient $ingredient): array
     {
         $query = $this->createQueryBuilder('itm')
@@ -69,6 +50,40 @@ class IngredientToMealRepository extends ServiceEntityRepository
         }
 
         return [];
+    }
+
+    /**
+     * @param array $ids
+     * @param Meal $meal
+     * @return IngredientToMeal[]
+     */
+    public function getAllElementsToDelete(array $ids, Meal $meal): array
+    {
+        $query = $this->createQueryBuilder('itm')
+            ->andWhere('itm.mealId = :mealId')->setParameter('mealId', $meal->getId())
+            ->andWhere('itm.ingredientId not in (:ids)')->setParameter('ids', $ids)
+            ->andWhere('itm.deleted = false');
+
+        try {
+            $result = $query->getQuery()->getResult();
+            return $result;
+        } catch (\Exception $e) {
+            $this->logCritical($e->getMessage(), __METHOD__);
+        }
+
+        return [];
+    }
+
+    public function removeGivenElements(array $ids): void
+    {
+        $query = $this->createQueryBuilder('itm')
+            ->andWhere('itm.id in (:ids)')->setParameter('ids', $ids);
+
+        try {
+            $query->getQuery()->execute();
+        } catch (\Exception $e) {
+            $this->logCritical($e->getMessage(), __METHOD__);
+        }
     }
 
 

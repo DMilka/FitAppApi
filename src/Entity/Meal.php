@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Core\Database\EntityTraits\EntityConnectorCreatorTrait;
 use App\Core\Database\HelperEntity\UserExtension;
 use App\Repository\MealRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,8 +23,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
  *          },
  *          "post"={
  *              "security"="is_granted('ROLE_MEAL_POST')",
- *              "normalization_context"={"groups"={"meal_read"}},
- *              "denormalization_context"={"groups"={"meal_write"}}
+ *              "normalization_context"={"groups"={"meal_read","entity_connector_creator_read"}},
+ *              "denormalization_context"={"groups"={"meal_write","entity_connector_creator_write"}}
  *          },
  *     },
  *     itemOperations={
@@ -33,8 +34,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
  *          },
  *          "put"={
  *              "security"="is_granted('ROLE_MEAL_PUT')",
- *              "normalization_context"={"groups"={"meal_read"}},
- *              "denormalization_context"={"groups"={"meal_update"}}
+ *              "normalization_context"={"groups"={"meal_read","entity_connector_creator_read"}},
+ *              "denormalization_context"={"groups"={"meal_update","entity_connector_creator_update"}}
  *          },
  *          "delete"={
  *               "security"="is_granted('ROLE_MEAL_DELETE')",
@@ -48,6 +49,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
  */
 class Meal extends UserExtension
 {
+    use EntityConnectorCreatorTrait;
+
     /**
      * @Groups({"meal_read"})
      * @ApiProperty(identifier=true)
@@ -69,12 +72,6 @@ class Meal extends UserExtension
      * @ORM\Column(type="string", length=255, name="description")
      */
     private ?string $description = null;
-
-    /**
-     * @Groups({"meal_write","meal_update"})
-     */
-    private ?string $ingredientIds = null;
-
 
     public function getId(): ?int
     {
@@ -108,24 +105,6 @@ class Meal extends UserExtension
     public function setDescription(?string $description): Meal
     {
         $this->description = $description;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getIngredientIds(): ?string
-    {
-        return $this->ingredientIds;
-    }
-
-    /**
-     * @param string|null $ingredientIds
-     * @return Meal
-     */
-    public function setIngredientIds(?string $ingredientIds): Meal
-    {
-        $this->ingredientIds = $ingredientIds;
         return $this;
     }
 }
