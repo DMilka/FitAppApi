@@ -135,7 +135,8 @@ class Users extends SoftDelete implements UserInterface
                 'ROLE_MEAL_TO_MEAL_SET_PUT',
                 'ROLE_MEAL_TO_MEAL_SET_DELETE',
                 "ROLE_ENTITY_CONNECTOR_CREATOR",
-                "ROLE_ENTITY_CONNECTOR_CREATOR_POST"
+                "ROLE_ENTITY_CONNECTOR_CREATOR_POST",
+                "ROLE_ENTITY_CONNECTOR_CREATOR_PUT"
         ];
     }
 

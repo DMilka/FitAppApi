@@ -13,15 +13,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "security"="is_granted('ROLE_ENTITY_CONNECTOR_CREATOR_POST')",
  *              "normalization_context"={"groups"={"entity_connector_creator_read"}},
  *              "denormalization_context"={"groups"={"entity_connector_creator_write"}}
- *          },
+ *          }
  *     },
- *     itemOperations={}
+ *     itemOperations={
+ *          "put"={
+ *              "security"="is_granted('ROLE_ENTITY_CONNECTOR_CREATOR_PUT')",
+ *              "normalization_context"={"groups"={"entity_connector_creator_read"}},
+ *              "denormalization_context"={"groups"={"entity_connector_creator_update"}}
+ *          }
+ *     }
  * )
  */
 trait EntityConnectorCreatorTrait
 {
     /**
-     * @Groups({"entity_connector_creator_read","entity_connector_creator_write"})
+     * @Groups({"entity_connector_creator_read","entity_connector_creator_write","entity_connector_creator_update"})
      */
     private ?string $connectorItems;
 

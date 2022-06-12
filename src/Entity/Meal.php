@@ -34,8 +34,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
  *          },
  *          "put"={
  *              "security"="is_granted('ROLE_MEAL_PUT')",
- *              "normalization_context"={"groups"={"meal_read"}},
- *              "denormalization_context"={"groups"={"meal_update"}}
+ *              "normalization_context"={"groups"={"meal_read","entity_connector_creator_read"}},
+ *              "denormalization_context"={"groups"={"meal_update","entity_connector_creator_update"}}
  *          },
  *          "delete"={
  *               "security"="is_granted('ROLE_MEAL_DELETE')",
