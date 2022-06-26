@@ -8,6 +8,7 @@ use App\Core\Exceptions\StandardExceptions\ItemNotFoundException;
 use App\Core\Exceptions\StandardExceptions\WrongOwnerException;
 use App\Core\Exceptions\StandardExceptions\WrongValueException;
 use App\Core\Helpers\ArrayHelper;
+use App\Core\Helpers\ClassCastHelper;
 use App\Core\Helpers\EntityConnectorCreatorCheck\EntityConnectorCreatorCheckEvent;
 use App\Core\Helpers\EntityConnectorCreatorCheck\EntityConnectorCreatorCheckSubscriber;
 use App\Entity\Ingredient;
@@ -87,12 +88,13 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
 
                                 if ($ingredientToMeal->getId()) {
                                     $existingIngredientToMeal = $this->getIngredientToMealRepository()->find($ingredientToMeal->getId());
-                                    if ($existingIngredientToMeal) {
-                                        $this->getManager()->remove($existingIngredientToMeal);
-                                    }
-                                }
 
-                                $this->dbPersist($ingredientToMeal);
+                                    if ($existingIngredientToMeal) {
+                                        ClassCastHelper::updateObject($existingIngredientToMeal, $ingredientToMeal, $this->getManager());
+                                    }
+                                } else {
+                                    $this->dbPersist($ingredientToMeal);
+                                }
                             } else {
                                 throw new WrongValueException(WrongValueException::MESSAGE);
                             }
@@ -101,7 +103,6 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
                         }
                     }
                 }
-
             }
             $this->dbFlush();
         }

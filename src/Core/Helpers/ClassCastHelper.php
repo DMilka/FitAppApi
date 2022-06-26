@@ -2,6 +2,7 @@
 
 namespace App\Core\Helpers;
 
+use Doctrine\ORM\EntityManager;
 use ReflectionObject;
 
 class ClassCastHelper
@@ -56,12 +57,51 @@ class ClassCastHelper
     {
         if (class_exists($className)) {
             if (property_exists($className, $propertyName)) {
-                if (method_exists($className, 'set' . ucfirst($propertyName))) {
-                    return 'set' . ucfirst($propertyName);
+                if (method_exists($className, 'set' . ClassCastHelper::camelize($propertyName))) {
+                    return 'set' . ClassCastHelper::camelize($propertyName);
                 }
             }
         }
 
         return null;
+    }
+
+    public static function camelize($input, $separator = '_')
+    {
+        return str_replace($separator, '', ucwords($input, $separator));
+    }
+
+    public static function updateObject(object $entity, object $object, EntityManager $entityManager): void
+    {
+        $classMetaData = $entityManager->getClassMetadata(get_class($object));
+        $columnNames = $classMetaData->getColumnNames();
+
+        foreach ($columnNames as $columnName) {
+            $fieldName = $classMetaData->getFieldForColumn($columnName);
+
+            /**
+             * @TODO: find way to skip id assign when someone names it e.g example_id
+             */
+            if ($fieldName === 'id') {
+                continue;
+            }
+
+            $getter = 'get' . ClassCastHelper::camelize($fieldName);
+            if (!method_exists(get_class($object), $getter)) {
+                $getter = 'is' . ClassCastHelper::camelize($fieldName);
+
+                if (!method_exists(get_class($object), $getter)) {
+                    if (property_exists(get_class($object), $fieldName)) {
+                        $entity->{$fieldName} = $object->{$fieldName};
+                        continue;
+                    }
+                }
+            }
+
+            $setter = ClassCastHelper::getEntitySetter(get_class($entity), $fieldName);
+            $entity->$setter($object->$getter());
+
+            $x = 1;
+        }
     }
 }
