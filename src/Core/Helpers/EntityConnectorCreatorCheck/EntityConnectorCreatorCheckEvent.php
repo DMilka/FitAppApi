@@ -9,14 +9,14 @@ class EntityConnectorCreatorCheckEvent extends Event
     private bool $isEntitySupportTrait = false;
     private object $parentEntity;
     private ?array $connectorClassElements = null;
-    private string $connectorClassName;
-    private array $createdElements;
+    private array $connectorClassNameArr;
+    private array $createdElements = [];
 
 
-    public function __construct(object $parentEntity, string $connectorClassName)
+    public function __construct(object $parentEntity, array $connectorClassNameArr)
     {
         $this->parentEntity = $parentEntity;
-        $this->connectorClassName = $connectorClassName;
+        $this->connectorClassNameArr = $connectorClassNameArr;
     }
 
     /**
@@ -74,20 +74,20 @@ class EntityConnectorCreatorCheckEvent extends Event
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getConnectorClassName(): string
+    public function getConnectorClassNameArr(): array
     {
-        return $this->connectorClassName;
+        return $this->connectorClassNameArr;
     }
 
     /**
-     * @param string $connectorClassName
+     * @param array $connectorClassNameArr
      * @return EntityConnectorCreatorCheckEvent
      */
-    public function setConnectorClassName(string $connectorClassName): EntityConnectorCreatorCheckEvent
+    public function setConnectorClassNameArr(array $connectorClassNameArr): EntityConnectorCreatorCheckEvent
     {
-        $this->connectorClassName = $connectorClassName;
+        $this->connectorClassNameArr = $connectorClassNameArr;
         return $this;
     }
 

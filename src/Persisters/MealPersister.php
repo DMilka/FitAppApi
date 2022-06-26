@@ -9,6 +9,7 @@ use App\Core\Exceptions\StandardExceptions\WrongOwnerException;
 use App\Core\Exceptions\StandardExceptions\WrongValueException;
 use App\Core\Helpers\ArrayHelper;
 use App\Core\Helpers\EntityConnectorCreatorCheck\EntityConnectorCreatorCheckEvent;
+use App\Core\Helpers\EntityConnectorCreatorCheck\EntityConnectorCreatorCheckSubscriber;
 use App\Entity\Ingredient;
 use App\Entity\IngredientToMeal;
 use App\Entity\Meal;
@@ -63,7 +64,7 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
      */
     public function postPersist($data, $context = []): void
     {
-        $entityConnectorEvent = new EntityConnectorCreatorCheckEvent($data, IngredientToMeal::class);
+        $entityConnectorEvent = new EntityConnectorCreatorCheckEvent($data, [IngredientToMeal::class]);
 
         $this->getEventDispatcher()->dispatch($entityConnectorEvent);
 
@@ -72,22 +73,35 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
 
         if (count($createdElements) > 0) {
             $userId = $this->getUserHelper()->getUser()->getId();
-            foreach ($createdElements as $ingredientToMeal) {
-                /** @var Ingredient $ingredient */
-                $ingredient = $this->getIngredientRepository()->find($ingredientToMeal->getIngredientId());
+            foreach ($createdElements as $element) {
+                if ($element->{EntityConnectorCreatorCheckSubscriber::CLASS_NAME} === "IngredientToMeal") {
+                    /** @var IngredientToMeal $ingredientToMeal */
+                    foreach ($element->{EntityConnectorCreatorCheckSubscriber::ELEMENTS} as $ingredientToMeal) {
+                        /** @var Ingredient $ingredient */
+                        $ingredient = $this->getIngredientRepository()->find($ingredientToMeal->getIngredientId());
 
-                if ($ingredient) {
-                    if ($ingredient->getUserId() === $userId) {
-                        $ingredientToMeal->setIngredient($ingredient);
-                        $ingredientToMeal->setMealId($data->getId());
+                        if ($ingredient) {
+                            if ($ingredient->getUserId() === $userId) {
+                                $ingredientToMeal->setIngredient($ingredient);
+                                $ingredientToMeal->setMealId($data->getId());
 
-                        $this->dbPersist($ingredientToMeal);
-                    } else {
-                        throw new WrongValueException(WrongValueException::MESSAGE);
+                                if ($ingredientToMeal->getId()) {
+                                    $existingIngredientToMeal = $this->getIngredientToMealRepository()->find($ingredientToMeal->getId());
+                                    if ($existingIngredientToMeal) {
+                                        $this->getManager()->remove($existingIngredientToMeal);
+                                    }
+                                }
+
+                                $this->dbPersist($ingredientToMeal);
+                            } else {
+                                throw new WrongValueException(WrongValueException::MESSAGE);
+                            }
+                        } else {
+                            throw new ItemNotFoundException(ItemNotFoundException::MESSAGE);
+                        }
                     }
-                } else {
-                    throw new ItemNotFoundException(ItemNotFoundException::MESSAGE);
                 }
+
             }
             $this->dbFlush();
         }
@@ -100,8 +114,7 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
      */
     public function preUpdate($data, $context = []): void
     {
-        $userId = $this->getUserHelper()->getUser()->getId();
-        $entityConnectorEvent = new EntityConnectorCreatorCheckEvent($data, IngredientToMeal::class);
+        $entityConnectorEvent = new EntityConnectorCreatorCheckEvent($data, [IngredientToMeal::class]);
 
         $this->getEventDispatcher()->dispatch($entityConnectorEvent);
 
@@ -130,6 +143,7 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
             $ingredient = $this->getIngredientRepository()->find($ingredientToMeal->getIngredientId());
 
             if ($ingredient) {
+                $userId = $this->getUserHelper()->getUser()->getId();
                 if ($ingredient->getUserId() === $userId) {
                     $ingredientToMeal->setIngredient($ingredient);
                     $ingredientToMeal->setMealId($data->getId());
@@ -188,7 +202,7 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
     public function postRemove($data, $context = []): void
     {
     }
-    
+
     private function getFreshlyCreatedElements(array $ingredientToMealArr): array
     {
         $freshlyCreated = [];
