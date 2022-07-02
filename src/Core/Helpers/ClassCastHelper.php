@@ -100,8 +100,6 @@ class ClassCastHelper
 
             $setter = ClassCastHelper::getEntitySetter(get_class($entity), $fieldName);
             $entity->$setter($object->$getter());
-
-            $x = 1;
         }
     }
 }

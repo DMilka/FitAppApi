@@ -72,40 +72,9 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
         /** @var IngredientToMeal[] $createdElements */
         $createdElements = $entityConnectorEvent->getCreatedElements();
 
-        if (count($createdElements) > 0) {
-            $userId = $this->getUserHelper()->getUser()->getId();
-            foreach ($createdElements as $element) {
-                if ($element->{EntityConnectorCreatorCheckSubscriber::CLASS_NAME} === "IngredientToMeal") {
-                    /** @var IngredientToMeal $ingredientToMeal */
-                    foreach ($element->{EntityConnectorCreatorCheckSubscriber::ELEMENTS} as $ingredientToMeal) {
-                        /** @var Ingredient $ingredient */
-                        $ingredient = $this->getIngredientRepository()->find($ingredientToMeal->getIngredientId());
+        $this->createIngredientsToMeal($data, $createdElements);
 
-                        if ($ingredient) {
-                            if ($ingredient->getUserId() === $userId) {
-                                $ingredientToMeal->setIngredient($ingredient);
-                                $ingredientToMeal->setMealId($data->getId());
-
-                                if ($ingredientToMeal->getId()) {
-                                    $existingIngredientToMeal = $this->getIngredientToMealRepository()->find($ingredientToMeal->getId());
-
-                                    if ($existingIngredientToMeal) {
-                                        ClassCastHelper::updateObject($existingIngredientToMeal, $ingredientToMeal, $this->getManager());
-                                    }
-                                } else {
-                                    $this->dbPersist($ingredientToMeal);
-                                }
-                            } else {
-                                throw new WrongValueException(WrongValueException::MESSAGE);
-                            }
-                        } else {
-                            throw new ItemNotFoundException(ItemNotFoundException::MESSAGE);
-                        }
-                    }
-                }
-            }
-            $this->dbFlush();
-        }
+        $this->dbFlush();
     }
 
     /**
@@ -123,40 +92,25 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
         $createdElements = $entityConnectorEvent->getCreatedElements();
         $createdElementsIngredientIds = [];
 
-        foreach ($createdElements as $item) {
-            $createdElementsIngredientIds[] = $item->getIngredientId();
-        }
-
-        /** @var IngredientToMeal[] $toDelete */
-        $toDeleteArr = $this->getIngredientToMealRepository()->getAllElementsToDelete($createdElementsIngredientIds, $data);
-
-        $now = new \DateTime('now', new \DateTimeZone('Europe/Warsaw'));
-        foreach ($toDeleteArr as $item) {
-            $item->setDeleted(true);
-            $item->setDeletedAt($now);
-        }
-
-        /** @var IngredientToMeal[] $freshlyCreated */
-        $freshlyCreated = $this->getFreshlyCreatedElements($createdElements);
-
-        foreach ($freshlyCreated as $ingredientToMeal) {
-            /** @var Ingredient $ingredient */
-            $ingredient = $this->getIngredientRepository()->find($ingredientToMeal->getIngredientId());
-
-            if ($ingredient) {
-                $userId = $this->getUserHelper()->getUser()->getId();
-                if ($ingredient->getUserId() === $userId) {
-                    $ingredientToMeal->setIngredient($ingredient);
-                    $ingredientToMeal->setMealId($data->getId());
-
-                    $this->dbPersist($ingredientToMeal);
-                } else {
-                    throw new WrongValueException(WrongValueException::MESSAGE);
+        foreach ($createdElements as $element) {
+            if ($element->{EntityConnectorCreatorCheckSubscriber::CLASS_NAME} === "IngredientToMeal") {
+                /** @var IngredientToMeal $ingredientToMeal */
+                foreach ($element->{EntityConnectorCreatorCheckSubscriber::ELEMENTS} as $ingredientToMeal) {
+                    $createdElementsIngredientIds[] = $ingredientToMeal->getIngredientId();
                 }
-            } else {
-                throw new ItemNotFoundException(ItemNotFoundException::MESSAGE);
+
+                /** @var IngredientToMeal[] $toDelete */
+                $toDeleteArr = $this->getIngredientToMealRepository()->getAllElementsToDelete($createdElementsIngredientIds, $data);
+
+                $now = new \DateTime('now', new \DateTimeZone('Europe/Warsaw'));
+                foreach ($toDeleteArr as $item) {
+                    $item->setDeleted(true);
+                    $item->setDeletedAt($now);
+                }
             }
         }
+        
+        $this->createIngredientsToMeal($data, $createdElements);
 
         $this->dbFlush();
     }
@@ -214,6 +168,43 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
         }
 
         return $freshlyCreated;
+    }
+
+    private function createIngredientsToMeal(Meal $data, array $createdElements): void
+    {
+        if (count($createdElements) > 0) {
+            $userId = $this->getUserHelper()->getUser()->getId();
+            foreach ($createdElements as $element) {
+                if ($element->{EntityConnectorCreatorCheckSubscriber::CLASS_NAME} === "IngredientToMeal") {
+                    /** @var IngredientToMeal $ingredientToMeal */
+                    foreach ($element->{EntityConnectorCreatorCheckSubscriber::ELEMENTS} as $ingredientToMeal) {
+                        /** @var Ingredient $ingredient */
+                        $ingredient = $this->getIngredientRepository()->find($ingredientToMeal->getIngredientId());
+
+                        if ($ingredient) {
+                            if ($ingredient->getUserId() === $userId) {
+                                $ingredientToMeal->setIngredient($ingredient);
+                                $ingredientToMeal->setMealId($data->getId());
+
+                                if ($ingredientToMeal->getId()) {
+                                    $existingIngredientToMeal = $this->getIngredientToMealRepository()->find($ingredientToMeal->getId());
+
+                                    if ($existingIngredientToMeal) {
+                                        ClassCastHelper::updateObject($existingIngredientToMeal, $ingredientToMeal, $this->getManager());
+                                    }
+                                } else {
+                                    $this->dbPersist($ingredientToMeal);
+                                }
+                            } else {
+                                throw new WrongValueException(WrongValueException::MESSAGE);
+                            }
+                        } else {
+                            throw new ItemNotFoundException(ItemNotFoundException::MESSAGE);
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
