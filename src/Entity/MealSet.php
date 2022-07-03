@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Core\Database\EntityTraits\EntityConnectorCreatorTrait;
 use App\Core\Database\HelperEntity\UserExtension;
 use App\Repository\MealSetRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,8 +22,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
  *          },
  *          "post"={
  *              "security"="is_granted('ROLE_MEAL_SET_POST')",
- *              "normalization_context"={"groups"={"meal_set_read"}},
- *              "denormalization_context"={"groups"={"meal_set_write"}}
+ *              "normalization_context"={"groups"={"meal_set_read","entity_connector_creator_read"}},
+ *              "denormalization_context"={"groups"={"meal_set_write","entity_connector_creator_write"}}
  *          },
  *     },
  *     itemOperations={
@@ -32,8 +33,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
  *          },
  *          "put"={
  *              "security"="is_granted('ROLE_MEAL_SET_PUT')",
- *              "normalization_context"={"groups"={"meal_set_read"}},
- *              "denormalization_context"={"groups"={"meal_set_update"}}
+ *              "normalization_context"={"groups"={"meal_set_read","entity_connector_creator_read"}},
+ *              "denormalization_context"={"groups"={"meal_set_update","entity_connector_creator_update"}}
  *          },
  *          "delete"={
  *              "security"="is_granted('ROLE_MEAL_SET_DELETE')",
@@ -47,6 +48,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
  */
 class MealSet extends UserExtension
 {
+    use EntityConnectorCreatorTrait;
+
     /**
      * @Groups({"meal_set_read"})
      * @ApiProperty(identifier=true)
@@ -68,11 +71,6 @@ class MealSet extends UserExtension
      * @ORM\Column(type="string", length=255, name="description")
      */
     private ?string $description = null;
-
-    /**
-     * @Groups({"meal_set_write","meal_set_update"})
-     */
-    private ?string $mealIds = null;
 
     public function getId(): ?int
     {

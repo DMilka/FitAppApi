@@ -64,9 +64,9 @@ class MealToMealSet extends SoftDelete
 
     /**
      * @Groups({"meal_to_meal_set_read", "meal_to_meal_set_write","meal_to_meal_set_update"})
-     * @ORM\Column(type="integer", name="meal_id", nullable=false)
+     * @ORM\Column(type="integer", name="meal_id", nullable=true)
      */
-    private int $mealId;
+    private ?int $mealId = null;
 
     /**
      * @ApiSubresource
@@ -76,9 +76,42 @@ class MealToMealSet extends SoftDelete
      */
     private ?Meal $meal = null;
 
+    /**
+     * @Groups({"meal_to_meal_set_read", "meal_to_meal_set_write","meal_to_meal_set_update"})
+     * @ORM\Column(type="integer", name="ingredient_id", nullable=true)
+     */
+    private ?int $ingredientId = null;
+
+    /**
+     * @ApiSubresource
+     * @Groups({"meal_to_meal_set_read", "meal_to_meal_set_write","meal_to_meal_set_update"})
+     * @ORM\OneToOne(targetEntity="Ingredient")
+     * @ORM\JoinColumn(name="ingredient_id",referencedColumnName="id")
+     */
+    private ?Ingredient $ingredient = null;
+
+    /**
+     * @Groups({"meal_to_meal_set_read", "meal_to_meal_set_write","meal_to_meal_set_update"})
+     * @ORM\Column(type="string",  name="amount", nullable=true)
+     */
+    private ?string $amount = null;
+
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @param int|null $id
+     * @return MealToMealSet
+     */
+    public function setId(?int $id): MealToMealSet
+    {
+        $this->id = $id;
+        return $this;
     }
 
     /**
@@ -100,18 +133,18 @@ class MealToMealSet extends SoftDelete
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getMealId(): int
+    public function getMealId(): ?int
     {
         return $this->mealId;
     }
 
     /**
-     * @param int $mealId
+     * @param int|null $mealId
      * @return MealToMealSet
      */
-    public function setMealId(int $mealId): MealToMealSet
+    public function setMealId(?int $mealId): MealToMealSet
     {
         $this->mealId = $mealId;
         return $this;
@@ -132,6 +165,60 @@ class MealToMealSet extends SoftDelete
     public function setMeal(?Meal $meal): MealToMealSet
     {
         $this->meal = $meal;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getIngredientId(): ?int
+    {
+        return $this->ingredientId;
+    }
+
+    /**
+     * @param int|null $ingredientId
+     * @return MealToMealSet
+     */
+    public function setIngredientId(?int $ingredientId): MealToMealSet
+    {
+        $this->ingredientId = $ingredientId;
+        return $this;
+    }
+
+    /**
+     * @return Ingredient|null
+     */
+    public function getIngredient(): ?Ingredient
+    {
+        return $this->ingredient;
+    }
+
+    /**
+     * @param Ingredient|null $ingredient
+     * @return MealToMealSet
+     */
+    public function setIngredient(?Ingredient $ingredient): MealToMealSet
+    {
+        $this->ingredient = $ingredient;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAmount(): ?string
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @param string|null $amount
+     * @return MealToMealSet
+     */
+    public function setAmount(?string $amount): MealToMealSet
+    {
+        $this->amount = $amount;
         return $this;
     }
 

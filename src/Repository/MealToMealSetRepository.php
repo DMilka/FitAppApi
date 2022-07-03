@@ -31,10 +31,16 @@ class MealToMealSetRepository extends ServiceEntityRepository
         return [];
     }
 
-    public function getMealsForGivenMealsIdsAndMealSet(MealSet $mealSet, array $ids): array
+    /**
+     * @param int[] $ingredientIds
+     * @param MealSet $meal
+     * @return array
+     */
+    public function getElementsToDeleteByIngredientArrAndMealSetId(MealSet $mealSet, array $ids): array
     {
         $query = $this->createQueryBuilder('itm')
-            ->andWhere('itm.mealId in (:ids)')
+            ->andWhere('itm.ingredientId not in (:ids)')
+            ->andWhere('itm.mealId is null')
             ->andWhere('itm.mealSetId = :mealSetId')
             ->andWhere('itm.deleted = false')
             ->setParameter('ids', $ids)
@@ -50,12 +56,20 @@ class MealToMealSetRepository extends ServiceEntityRepository
         return [];
     }
 
-    public function getAllMealsForMealSet(MealSet $meal): array
+    /**
+     * @param int[] $mealIds
+     * @param MealSet $meal
+     * @return array
+     */
+    public function getElementsToDeleteByMealArrAndMealSetId(MealSet $mealSet, array $mealIds): array
     {
-        $query = $this->createQueryBuilder('mtms')
-            ->andWhere('mtms.mealSetId = :id')
-            ->andWhere('mtms.deleted = false')
-            ->setParameter('id', $meal->getId());
+        $query = $this->createQueryBuilder('itm')
+            ->andWhere('itm.mealId not in (:ids)')
+            ->andWhere('itm.ingredientId is null')
+            ->andWhere('itm.mealSetId = :mealSetId')
+            ->andWhere('itm.deleted = false')
+            ->setParameter('ids', $mealIds)
+            ->setParameter('mealSetId', $mealSet->getId());
 
         try {
             $result = $query->getQuery()->getResult();

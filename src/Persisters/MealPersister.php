@@ -158,18 +158,6 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
     {
     }
 
-    private function getFreshlyCreatedElements(array $ingredientToMealArr): array
-    {
-        $freshlyCreated = [];
-        foreach ($ingredientToMealArr as $ingredientToMeal) {
-            if (!$ingredientToMeal->getId()) {
-                $freshlyCreated[] = $ingredientToMeal;
-            }
-        }
-
-        return $freshlyCreated;
-    }
-
     private function createIngredientsToMeal(Meal $data, array $createdElements): void
     {
         if (count($createdElements) > 0) {
