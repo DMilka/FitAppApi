@@ -8,6 +8,8 @@ use App\Entity\IngredientToMeal;
 use App\Entity\Meal;
 use App\Entity\MealSet;
 use App\Entity\MealToMealSet;
+use App\Entity\Training;
+use App\Entity\TrainingSet;
 use App\Entity\Users;
 use App\Repository\AmountTypeRepository;
 use App\Repository\IngredientRepository;
@@ -15,6 +17,8 @@ use App\Repository\IngredientToMealRepository;
 use App\Repository\MealRepository;
 use App\Repository\MealSetRepository;
 use App\Repository\MealToMealSetRepository;
+use App\Repository\TrainingRepository;
+use App\Repository\TrainingSetRepository;
 use App\Repository\UsersRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -68,5 +72,15 @@ trait HandlerDatabaseTrait
     public function getMealToMealSetRepository(): MealToMealSetRepository
     {
         return $this->getRepositoryForClass(MealToMealSet::class);
+    }
+
+    public function getTrainingRepository(): TrainingRepository
+    {
+        return $this->getRepositoryForClass(Training::class);
+    }
+
+    public function getTrainingSetRepository(): TrainingSetRepository
+    {
+        return $this->getRepositoryForClass(TrainingSet::class);
     }
 }
