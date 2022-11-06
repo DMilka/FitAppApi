@@ -22,13 +22,13 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
-        exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Kernel.php'
-            - '../src/Tests/'
-
+        exclude: '../src/App/{Kernel.php}'
     ### Events
     App\Core\Authentication\Event\:
         resource: '../src/Core/Authentication/Event'
         public: true
         arguments:
+    App\Core\Security\:
+        resource: '../src/Core/Security/*'
+        public: true
+        arguments: [ '@service_container' ]

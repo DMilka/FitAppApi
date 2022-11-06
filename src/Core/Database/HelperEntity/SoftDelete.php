@@ -2,18 +2,17 @@
 
 namespace App\Core\Database\HelperEntity;
 
+use App\Repository\UsersRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Entity(repositoryClass: UsersRepository::class)]
 class SoftDelete
 {
-    /**
-     * @ORM\Column(type="boolean", nullable=false, name="deleted")
-     */
+
+    #[Orm\Column(name:'deleted',type: 'boolean')]
     protected bool $deleted = false;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true, name="deleted_at")
-     */
+    #[Orm\Column(name:'deleted_at',type: 'datetime', nullable: true)]
     protected ?\DateTime $deletedAt = null;
 
     /**

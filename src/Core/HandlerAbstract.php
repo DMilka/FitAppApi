@@ -23,7 +23,6 @@ class HandlerAbstract extends AbstractController
     /** @var UserHelper $userHelper */
     private UserHelper $userHelper;
 
-
     public function __construct(ManagerRegistry $managerRegistry, EventDispatcherInterface $eventDispatcher, UserHelper $userHelper)
     {
         $this->managerRegistry = $managerRegistry;
@@ -35,7 +34,6 @@ class HandlerAbstract extends AbstractController
     {
         return  $this->eventDispatcher;
     }
-
 
     public function dbPersist(object $object):void
     {

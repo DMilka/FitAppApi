@@ -7,14 +7,22 @@ use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Metadata\Operation;
 use App\Core\Database\HelperEntity\SoftDelete;
-use App\Core\HandlerAbstract;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Extension extends HandlerAbstract implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
+class Extension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
     const ENTITY_PATH = 'App\Entity';
     const SECURE_PATH = 'Security\Entity';
     const CLASS_SUFFIX = 'Secure';
+
+    /** @var ContainerInterface */
+    private ContainerInterface $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
 
     public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void
     {

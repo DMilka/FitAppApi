@@ -3,13 +3,14 @@
 namespace App\Security\Entity;
 
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Metadata\Operation;
 use App\Core\Security\ExtensionAbstract;
 use App\Core\Security\ExtensionInterface;
 use Doctrine\ORM\QueryBuilder;
 
 class IngredientToMealSecure extends ExtensionAbstract implements ExtensionInterface
 {
-    public function prepareQueryForCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null, array $context = [])
+    public function prepareQueryForCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation, array $context = [])
     {
         if (!$this->checkResourceClass($this->getResourceClass())) {
             return;
@@ -26,7 +27,7 @@ class IngredientToMealSecure extends ExtensionAbstract implements ExtensionInter
         
     }
 
-    public function prepareQueryForItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null, array $context = [])
+    public function prepareQueryForItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation, array $context = [])
     {
         if (!$this->checkResourceClass($this->getResourceClass())) {
             return;

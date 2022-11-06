@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Core\Database\HelperEntity\SoftDelete;
 use App\Repository\UsersRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Core\Authentication\RegisterController;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -33,19 +34,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
 // */
 
 #[ORM\Entity]
-class Users extends SoftDelete implements UserInterface
+class Users extends SoftDelete implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
-    private $id;
+    private ?int $id;
 
     #[Orm\Column(name:'username',type: 'string')]
-    private $username;
+    private string $username;
 
     #[Orm\Column(name:'email',type: 'string')]
-    private $email;
+    private string $email;
 
     #[Orm\Column(name:'password',type: 'string')]
-    private $password;
+    private string $password;
 
     public function setId(int $id): self
     {

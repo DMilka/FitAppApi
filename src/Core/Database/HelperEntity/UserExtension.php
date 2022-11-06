@@ -4,11 +4,10 @@ namespace App\Core\Database\HelperEntity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Entity]
 class UserExtension extends SoftDelete
 {
-    /**
-     * @ORM\Column(type="integer", nullable=false, name="user_id")
-     */
+    #[Orm\Column(name:'userId',type: 'integer')]
     protected int $userId;
 
     /**

@@ -3,7 +3,13 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use App\Core\Database\HelperEntity\SoftDelete;
 use App\Core\Database\HelperEntity\UserExtension;
+use App\Persisters\AmountTypePersister;
 use App\Repository\AmountTypeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -44,6 +50,20 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity]
 #[ApiResource]
+#[Get(
+    security: "is_granted('ROLE_AMOUNT_TYPE_GET')",
+)]
+#[GetCollection(
+    security: "is_granted('ROLE_AMOUNT_TYPE_GET')",
+)]
+#[Post(
+    security: "is_granted('ROLE_AMOUNT_TYPE_POST')",
+    processor: AmountTypePersister::class
+)]
+#[Delete(
+    security: "is_granted('ROLE_AMOUNT_TYPE_DELETE', object)",
+    processor: AmountTypePersister::class
+)]
 class AmountType extends UserExtension
 {
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]

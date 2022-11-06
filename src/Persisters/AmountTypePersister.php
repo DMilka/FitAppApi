@@ -22,6 +22,7 @@ class AmountTypePersister extends HandlerAbstract implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
+        $x =1;
         // TODO: Implement process() method.
     }
 
@@ -38,6 +39,7 @@ class AmountTypePersister extends HandlerAbstract implements ProcessorInterface
      */
     public function remove($data, array $context = []): void
     {
+        $x = 1;
 //        parent::remove($data, $context);
     }
 

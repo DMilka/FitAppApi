@@ -3,6 +3,7 @@
 namespace App\Core\Security;
 
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Metadata\Operation;
 use Doctrine\ORM\QueryBuilder;
 
 interface ExtensionInterface
@@ -11,7 +12,7 @@ interface ExtensionInterface
         QueryBuilder $queryBuilder,
         QueryNameGeneratorInterface $queryNameGenerator,
         string $resourceClass,
-        string $operationName,
+        Operation $operation,
         array $context = []
     );
 
@@ -19,7 +20,7 @@ interface ExtensionInterface
         QueryBuilder $queryBuilder,
         QueryNameGeneratorInterface $queryNameGenerator,
         string $resourceClass,
-        string $operationName,
+        Operation $operation,
         array $context = []
     );
 
