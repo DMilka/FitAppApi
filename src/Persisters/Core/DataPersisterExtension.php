@@ -3,14 +3,15 @@
 namespace App\Persisters\Core;
 
 
+use ApiPlatform\Metadata\Operation;
 use App\Core\HandlerAbstract;
 
-abstract class DataPersisterExtension extends HandlerAbstract implements CustomDataPersisterInterface
+abstract class DataPersisterExtension extends HandlerAbstract
 {
     /**
      * @inheritDoc
      */
-    public function persist($data, array $context = [])
+    public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         try {
             if ($this->getManager()->contains($data)) {

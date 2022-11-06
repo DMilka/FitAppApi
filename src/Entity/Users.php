@@ -9,53 +9,42 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use App\Core\Authentication\RegisterController;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * ApiResource(
- *      collectionOperations={
- *          "get"={
- *              "normalization_context"={"groups"={"users_read"}}
- *          },
- *          "post"={
- *              "normalization_context"={"groups"={"users_read"}},
- *              "denormalization_context"={"groups"={"users_write"}}
- *          },
- *          "register"={
- *              "normalization_context"={"groups"={"users_read"}},
- *              "denormalization_context"={"groups"={"users_write"}},
- *              "method"="POST",
- *              "path"="/api/register",
- *              "controller"=RegisterController::class,
- *          }
- *
- *     }
- * )
- * @ORM\Entity(repositoryClass=UsersRepository::class)
- */
+///**
+// * ApiResource(
+// *      collectionOperations={
+// *          "get"={
+// *              "normalization_context"={"groups"={"users_read"}}
+// *          },
+// *          "post"={
+// *              "normalization_context"={"groups"={"users_read"}},
+// *              "denormalization_context"={"groups"={"users_write"}}
+// *          },
+// *          "register"={
+// *              "normalization_context"={"groups"={"users_read"}},
+// *              "denormalization_context"={"groups"={"users_write"}},
+// *              "method"="POST",
+// *              "path"="/api/register",
+// *              "controller"=RegisterController::class,
+// *          }
+// *
+// *     }
+// * )
+// * @ORM\Entity(repositoryClass=UsersRepository::class)
+// */
+
+#[ORM\Entity]
 class Users extends SoftDelete implements UserInterface
 {
-    /**
-     * @Groups({"users_read", "users_write"})
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
     private $id;
 
-    /**
-     * @Groups({"users_read", "users_write"})
-     * @ORM\Column(type="string", length=255)
-     */
+    #[Orm\Column(name:'username',type: 'string')]
     private $username;
 
-    /**
-     *
-     * @ORM\Column(type="string", length=255)
-     */
+    #[Orm\Column(name:'email',type: 'string')]
     private $email;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[Orm\Column(name:'password',type: 'string')]
     private $password;
 
     public function setId(int $id): self
@@ -106,7 +95,7 @@ class Users extends SoftDelete implements UserInterface
         return $this;
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
         return ['ROLE_USER',
                 'ROLE_INGREDIENT_GET',

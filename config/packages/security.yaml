@@ -1,7 +1,7 @@
 security:
-    encoders:
-        App\Entity\Users:
-            algorithm: bcrypt
+#    encoders:
+#        App\Entity\Users:
+#            algorithm: bcrypt
     # https://symfony.com/doc/current/security/experimental_authenticators.html
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#c-hashing-passwords
@@ -22,9 +22,9 @@ security:
                 check_path: /api/login
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
+#            guard:
+#                authenticators:
+#                    - lexik_jwt_authentication.jwt_token_authenticator
 
         api:
             pattern: ^/api

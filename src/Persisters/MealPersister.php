@@ -2,11 +2,13 @@
 
 namespace App\Persisters;
 
-use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
 use App\Core\Authentication\Helper\FormHelper;
 use App\Core\Exceptions\StandardExceptions\ItemNotFoundException;
 use App\Core\Exceptions\StandardExceptions\WrongOwnerException;
 use App\Core\Exceptions\StandardExceptions\WrongValueException;
+use App\Core\HandlerAbstract;
 use App\Core\Helpers\ArrayHelper;
 use App\Core\Helpers\ClassCastHelper;
 use App\Core\Helpers\EntityConnectorCreatorCheck\EntityConnectorCreatorCheckEvent;
@@ -14,9 +16,8 @@ use App\Core\Helpers\EntityConnectorCreatorCheck\EntityConnectorCreatorCheckSubs
 use App\Entity\Ingredient;
 use App\Entity\IngredientToMeal;
 use App\Entity\Meal;
-use App\Persisters\Core\DataPersisterExtension;
 
-class MealPersister extends DataPersisterExtension implements ContextAwareDataPersisterInterface
+class MealPersister extends HandlerAbstract implements ProcessorInterface
 {
     /**
      * @inheritDoc
@@ -26,12 +27,9 @@ class MealPersister extends DataPersisterExtension implements ContextAwareDataPe
         return $data instanceof Meal;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function persist($data, array $context = []): object
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-        return parent::persist($data, $context);
+        // TODO: Implement process() method.
     }
 
     /**

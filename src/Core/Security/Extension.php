@@ -2,33 +2,21 @@
 
 namespace App\Core\Security;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
+use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Metadata\Operation;
 use App\Core\Database\HelperEntity\SoftDelete;
+use App\Core\HandlerAbstract;
 use Doctrine\ORM\QueryBuilder;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\Security\Core\Security;
 
-class Extension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
+class Extension extends HandlerAbstract implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
     const ENTITY_PATH = 'App\Entity';
     const SECURE_PATH = 'Security\Entity';
     const CLASS_SUFFIX = 'Secure';
 
-    /** @var ContainerInterface $container */
-    private ContainerInterface $container;
-
-    /** @var Security $security */
-    private Security $security;
-
-    public function __construct(ContainerInterface $container, Security $security)
-    {
-        $this->container = $container;
-        $this->security = $security;
-    }
-
-    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null, array $context = [])
+    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void
     {
         if (strpos($resourceClass, self::ENTITY_PATH) === false) {
             return;
@@ -44,12 +32,12 @@ class Extension implements QueryCollectionExtensionInterface, QueryItemExtension
         if (class_exists($className)) {
             /** @var ExtensionInterface $object */
             $object = $this->container->get($className);
-            $object->prepareQueryForCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
+            $object->prepareQueryForCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operation, $context);
         }
 
     }
 
-    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null, array $context = [])
+    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, Operation $operation = null, array $context = []): void
     {
         if (strpos($resourceClass, self::ENTITY_PATH) === false) {
             return;
@@ -65,7 +53,7 @@ class Extension implements QueryCollectionExtensionInterface, QueryItemExtension
         if (class_exists($className)) {
             /** @var ExtensionInterface $object */
             $object = $this->container->get($className);
-            $object->prepareQueryForItem($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
+            $object->prepareQueryForItem($queryBuilder, $queryNameGenerator, $resourceClass, $operation, $context);
         }
     }
 }

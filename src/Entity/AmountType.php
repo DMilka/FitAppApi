@@ -2,71 +2,57 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\Core\Database\HelperEntity\UserExtension;
 use App\Repository\AmountTypeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
-/**
- * @ApiResource(
- *      collectionOperations={
- *          "get"={
- *              "security"="is_granted('ROLE_AMOUNT_TYPE_GET')",
- *              "normalization_context"={"groups"={"amount_type_read"}}
- *          },
- *          "post"={
- *              "security"="is_granted('ROLE_AMOUNT_TYPE_POST')",
- *              "normalization_context"={"groups"={"amount_type_read"}},
- *              "denormalization_context"={"groups"={"amount_type_write"}}
- *          },
- *     },
- *     itemOperations={
- *          "get"={
- *              "security"="is_granted('ROLE_AMOUNT_TYPE_GET')",
- *              "normalization_context"={"groups"={"amount_type_read"}}
- *          },
- *          "put"={
- *              "security"="is_granted('ROLE_AMOUNT_TYPE_PUT')",
- *              "normalization_context"={"groups"={"amount_type_read"}},
- *              "denormalization_context"={"groups"={"amount_type_update"}}
- *          },
- *          "delete"={
- *              "security"="is_granted('ROLE_AMOUNT_TYPE_DELETE')",
- *              "denormalization_context"={"groups"={"amount_type_delete"}}
- *          }
- *     }
- * )
- * @ORM\Entity(repositoryClass=AmountTypeRepository::class)
- * @ApiFilter(SearchFilter::class, properties={"name": "ipartial", "description": "ipartial"})
- * @ApiFilter(OrderFilter::class, properties={"id","name", "description"}, arguments={"orderParameterName"="order"})
- */
+///**
+// * @ApiResource(
+// *      collectionOperations={
+// *          "get"={
+// *              "security"="is_granted('ROLE_AMOUNT_TYPE_GET')",
+// *              "normalization_context"={"groups"={"amount_type_read"}}
+// *          },
+// *          "post"={
+// *              "security"="is_granted('ROLE_AMOUNT_TYPE_POST')",
+// *              "normalization_context"={"groups"={"amount_type_read"}},
+// *              "denormalization_context"={"groups"={"amount_type_write"}}
+// *          },
+// *     },
+// *     itemOperations={
+// *          "get"={
+// *              "security"="is_granted('ROLE_AMOUNT_TYPE_GET')",
+// *              "normalization_context"={"groups"={"amount_type_read"}}
+// *          },
+// *          "put"={
+// *              "security"="is_granted('ROLE_AMOUNT_TYPE_PUT')",
+// *              "normalization_context"={"groups"={"amount_type_read"}},
+// *              "denormalization_context"={"groups"={"amount_type_update"}}
+// *          },
+// *          "delete"={
+// *              "security"="is_granted('ROLE_AMOUNT_TYPE_DELETE')",
+// *              "denormalization_context"={"groups"={"amount_type_delete"}}
+// *          }
+// *     }
+// * )
+// * @ORM\Entity(repositoryClass=AmountTypeRepository::class)
+// * @ApiFilter(SearchFilter::class, properties={"name": "ipartial", "description": "ipartial"})
+// * @ApiFilter(OrderFilter::class, properties={"id","name", "description"}, arguments={"orderParameterName"="order"})
+// */
+
+#[ORM\Entity]
+#[ApiResource]
 class AmountType extends UserExtension
 {
-    /**
-     * @Groups({"amount_type_read"})
-     * @ApiProperty(identifier=true)
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\SequenceGenerator(sequenceName="amount_type_id_seq")
-     * @ORM\Column(type="integer", name="id")
-     */
+    #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
     private ?int $id = null;
 
-    /**
-     * @Groups({"amount_type_read", "amount_type_write", "amount_type_update"})
-     * @ORM\Column(type="string", length=255, name="name")
-     */
+    #[Orm\Column(name:'name',type: 'string')]
     private string $name;
 
-    /**
-     * @Groups({"amount_type_read", "amount_type_write", "amount_type_update"})
-     * @ORM\Column(type="string", length=255, name="description")
-     */
+    #[Orm\Column(name:'description',type: 'string', nullable: true)]
     private ?string $description = null;
 
     public function getId(): ?int

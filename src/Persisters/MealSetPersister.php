@@ -2,12 +2,11 @@
 
 namespace App\Persisters;
 
-use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
-use App\Core\Authentication\Helper\FormHelper;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
 use App\Core\Exceptions\StandardExceptions\ItemNotFoundException;
-use App\Core\Exceptions\StandardExceptions\WrongOwnerException;
 use App\Core\Exceptions\StandardExceptions\WrongValueException;
-use App\Core\Helpers\ArrayHelper;
+use App\Core\HandlerAbstract;
 use App\Core\Helpers\ClassCastHelper;
 use App\Core\Helpers\EntityConnectorCreatorCheck\EntityConnectorCreatorCheckEvent;
 use App\Core\Helpers\EntityConnectorCreatorCheck\EntityConnectorCreatorCheckSubscriber;
@@ -16,9 +15,8 @@ use App\Entity\IngredientToMeal;
 use App\Entity\Meal;
 use App\Entity\MealSet;
 use App\Entity\MealToMealSet;
-use App\Persisters\Core\DataPersisterExtension;
 
-class MealSetPersister extends DataPersisterExtension implements ContextAwareDataPersisterInterface
+class MealSetPersister extends HandlerAbstract implements ProcessorInterface
 {
     /**
      * @inheritDoc
@@ -28,12 +26,9 @@ class MealSetPersister extends DataPersisterExtension implements ContextAwareDat
         return $data instanceof MealSet;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function persist($data, array $context = []): object
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-        return parent::persist($data, $context);
+        // TODO: Implement process() method.
     }
 
     /**
@@ -41,7 +36,7 @@ class MealSetPersister extends DataPersisterExtension implements ContextAwareDat
      */
     public function remove($data, array $context = []): void
     {
-        parent::remove($data, $context);
+//        parent::remove($data, $context);
     }
 
     public function prePersist($data, $context = []): void

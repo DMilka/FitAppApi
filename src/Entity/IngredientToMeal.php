@@ -2,70 +2,45 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiSubresource;
-use App\Core\Database\HelperEntity\SoftDelete;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
-use App\Repository\IngredientToMealRepository;
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
+use App\Core\Database\HelperEntity\SoftDelete;
+///**
+// * @ApiResource(
+// *      collectionOperations={
+// *          "get"={
+// *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
+// *              "normalization_context"={"groups"={"ingredient_to_meal_read"}}
+// *          }
+// *     },
+// *     itemOperations={
+// *          "get"={
+// *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
+// *              "normalization_context"={"groups"={"ingredient_to_meal_read"}}
+// *          }
+// *     }
+// * )
+// * @ORM\Entity(repositoryClass=IngredientToMealRepository::class)
+// * @ApiFilter(NumericFilter::class, properties={"mealId"})
+// */
 
-/**
- * @ApiResource(
- *      collectionOperations={
- *          "get"={
- *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
- *              "normalization_context"={"groups"={"ingredient_to_meal_read"}}
- *          }
- *     },
- *     itemOperations={
- *          "get"={
- *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
- *              "normalization_context"={"groups"={"ingredient_to_meal_read"}}
- *          }
- *     }
- * )
- * @ORM\Entity(repositoryClass=IngredientToMealRepository::class)
- * @ApiFilter(NumericFilter::class, properties={"mealId"})
- */
+#[ORM\Entity]
+#[ApiResource]
 class IngredientToMeal extends SoftDelete
 {
-    /**
-     * @Groups({"ingredient_to_meal_read"})
-     * @ApiProperty(identifier=true)
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\SequenceGenerator(sequenceName="ingredient_to_meal_id_seq")
-     * @ORM\Column(type="integer", name="id")
-     */
+    #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
     private ?int $id = null;
 
-    /**
-     * @Groups({"ingredient_to_meal_read", "ingredient_to_meal_write","ingredient_to_meal_update"})
-     * @ORM\Column(type="integer",  name="ingredient_id", nullable=false)
-     */
+    #[Orm\Column(name:'ingredient_id',type: 'integer')]
     private int $ingredientId;
 
-    /**
-     * @ApiSubresource
-     * @Groups({"ingredient_to_meal_read", "ingredient_to_meal_write","ingredient_to_meal_update"})
-     * @ORM\OneToOne(targetEntity="Ingredient")
-     * @ORM\JoinColumn(name="ingredient_id",referencedColumnName="id")
-     */
+    #[ORM\OneToMany(mappedBy: 'ingredientToMeal', targetEntity: Ingredient::class, cascade: ['persist'])]
     private ?Ingredient $ingredient = null;
 
-    /**
-     * @Groups({"ingredient_to_meal_read", "ingredient_to_meal_write","ingredient_to_meal_update"})
-     * @ORM\Column(type="integer", name="meal_id", nullable=false)
-     */
+    #[Orm\Column(name:'meal_id', type: 'integer')]
     private int $mealId;
 
-    /**
-     * @Groups({"ingredient_to_meal_read", "ingredient_to_meal_write","ingredient_to_meal_update"})
-     * @ORM\Column(type="integer", name="amount", nullable=false)
-     */
+    #[Orm\Column(name:'amount',type: 'integer')]
     private int $amount = 0;
 
     public function getId(): ?int

@@ -2,11 +2,9 @@
 
 namespace App\Security\Entity;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
-use App\Entity\AmountType;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use App\Core\Security\ExtensionAbstract;
 use App\Core\Security\ExtensionInterface;
-use App\Entity\Ingredient;
 use Doctrine\ORM\QueryBuilder;
 
 class IngredientToMealSecure extends ExtensionAbstract implements ExtensionInterface

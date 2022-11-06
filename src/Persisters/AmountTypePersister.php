@@ -2,13 +2,15 @@
 
 namespace App\Persisters;
 
-use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
 use App\Core\Database\HelperEntity\SoftDelete;
+use App\Core\HandlerAbstract;
 use App\Entity\AmountType;
 use App\Entity\Ingredient;
 use App\Persisters\Core\DataPersisterExtension;
 
-class AmountTypePersister extends DataPersisterExtension implements ContextAwareDataPersisterInterface
+class AmountTypePersister extends HandlerAbstract implements ProcessorInterface
 {
     /**
      * @inheritDoc
@@ -18,12 +20,17 @@ class AmountTypePersister extends DataPersisterExtension implements ContextAware
         return $data instanceof AmountType;
     }
 
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
+    {
+        // TODO: Implement process() method.
+    }
+
     /**
      * @inheritDoc
      */
     public function persist($data, array $context = []): object
     {
-        return parent::persist($data, $context);
+//        return parent::persist($data, $context);
     }
 
     /**
@@ -31,7 +38,7 @@ class AmountTypePersister extends DataPersisterExtension implements ContextAware
      */
     public function remove($data, array $context = []): void
     {
-        parent::remove($data, $context);
+//        parent::remove($data, $context);
     }
 
     public function prePersist($data, $context = []): void

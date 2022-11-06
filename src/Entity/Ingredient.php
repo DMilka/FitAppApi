@@ -2,112 +2,79 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Core\Database\HelperEntity\UserExtension;
-use App\Repository\IngredientRepository;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
-/**
- * @ApiResource(
- *      collectionOperations={
- *          "get"={
- *              "security"="is_granted('ROLE_INGREDIENT_GET')",
- *              "normalization_context"={"groups"={"ingredient_read"}}
- *          },
- *          "post"={
- *              "security"="is_granted('ROLE_INGREDIENT_POST')",
- *              "normalization_context"={"groups"={"ingredient_read"}},
- *              "denormalization_context"={"groups"={"ingredient_write"}}
- *          },
- *     },
- *     itemOperations={
- *          "get"={
- *              "security"="is_granted('ROLE_INGREDIENT_GET')",
- *              "normalization_context"={"groups"={"ingredient_read"}}
- *          },
- *          "put"={
- *              "security"="is_granted('ROLE_INGREDIENT_PUT')",
- *              "normalization_context"={"groups"={"ingredient_read"}},
- *              "denormalization_context"={"groups"={"ingredient_update"}}
- *          },
- *          "delete"={
- *              "security"="is_granted('ROLE_INGREDIENT_DELETE')",
- *              "denormalization_context"={"groups"={"ingredient_delete"}}
- *          }
- *     }
- * )
- * @ORM\Entity(repositoryClass=IngredientRepository::class)
- * @ApiFilter(SearchFilter::class, properties={"name": "ipartial", "description": "ipartial"})
- * @ApiFilter(NumericFilter::class, properties={"amount","protein","carbohydrate","fat","calorie"})
- * @ApiFilter(OrderFilter::class, properties={"id","name", "description","amount","protein","carbohydrate","fat","amount_type_id","calorie"}, arguments={"orderParameterName"="order"})
- */
+use App\Core\Database\HelperEntity\UserExtension;
+use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+
+///**
+// * @ApiResource(
+// *      collectionOperations={
+// *          "get"={
+// *              "security"="is_granted('ROLE_INGREDIENT_GET')",
+// *              "normalization_context"={"groups"={"ingredient_read"}}
+// *          },
+// *          "post"={
+// *              "security"="is_granted('ROLE_INGREDIENT_POST')",
+// *              "normalization_context"={"groups"={"ingredient_read"}},
+// *              "denormalization_context"={"groups"={"ingredient_write"}}
+// *          },
+// *     },
+// *     itemOperations={
+// *          "get"={
+// *              "security"="is_granted('ROLE_INGREDIENT_GET')",
+// *              "normalization_context"={"groups"={"ingredient_read"}}
+// *          },
+// *          "put"={
+// *              "security"="is_granted('ROLE_INGREDIENT_PUT')",
+// *              "normalization_context"={"groups"={"ingredient_read"}},
+// *              "denormalization_context"={"groups"={"ingredient_update"}}
+// *          },
+// *          "delete"={
+// *              "security"="is_granted('ROLE_INGREDIENT_DELETE')",
+// *              "denormalization_context"={"groups"={"ingredient_delete"}}
+// *          }
+// *     }
+// * )
+// * @ORM\Entity(repositoryClass=IngredientRepository::class)
+// * @ApiFilter(SearchFilter::class, properties={"name": "ipartial", "description": "ipartial"})
+// * @ApiFilter(NumericFilter::class, properties={"amount","protein","carbohydrate","fat","calorie"})
+// * @ApiFilter(OrderFilter::class, properties={"id","name", "description","amount","protein","carbohydrate","fat","amount_type_id","calorie"}, arguments={"orderParameterName"="order"})
+// */
+
+#[ORM\Entity]
+#[ApiResource]
 class Ingredient extends UserExtension
 {
-    /**
-     * @Groups({"ingredient_read"})
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", name="id")
-     */
+
+    #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
     private int $id;
 
-    /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
-     * @ORM\Column(type="string", length=255, name="name")
-     */
+    #[Orm\Column(name:'name',type: 'string')]
     private string $name;
 
-    /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
-     * @ORM\Column(type="string", length=255, nullable=true, name="description")
-     */
+    #[Orm\Column(name:'description',type: 'string', nullable: true)]
     private ?string $description = null;
 
-    /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
-     * @ORM\Column(type="integer", name="amount")
-     */
+    #[Orm\Column(name:'amount',type: 'integer', nullable: true)]
     private ?int $amount = null;
 
-    /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
-     * @ORM\Column(type="integer", nullable=true, name="protein")
-     */
+    #[Orm\Column(name:'protein',type: 'integer', nullable: true)]
     private ?int $protein = null;
 
-    /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
-     * @ORM\Column(type="integer", nullable=true, name="carbohydrate")
-     */
+    #[Orm\Column(name:'carbohydrate',type: 'integer', nullable: true)]
     private ?int $carbohydrate = null;
 
-    /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
-     * @ORM\Column(type="integer", nullable=true, name="fat")
-     */
+    #[Orm\Column(name:'fat',type: 'integer', nullable: true)]
     private ?int $fat = null;
 
-    /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
-     * @ORM\Column(type="integer", nullable=true, name="calorie")
-     */
+    #[Orm\Column(name:'calorie',type: 'integer', nullable: true)]
     private ?int $calorie = null;
 
-    /**
-     * @Groups({"ingredient_read", "ingredient_write", "ingredient_update","ingredient_to_meal_read"})
-     * @ORM\Column(type="integer", nullable=false, name="amount_type_id")
-     */
+    #[Orm\Column(name:'amount_type_id',type: 'integer', nullable: true)]
     private int $amountTypeId;
 
-    /**
-     * @Groups({"ingredient_read","ingredient_to_meal_read"})
-     * @ORM\Column(type="integer", nullable=false, name="divider_value")
-     */
+    #[Orm\Column(name:'divider_value',type: 'integer')]
     private int $dividerValue = 100;
 
 

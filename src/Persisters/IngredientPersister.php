@@ -2,14 +2,16 @@
 
 namespace App\Persisters;
 
-use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
 use App\Core\Exceptions\StandardExceptions\ItemNotFoundException;
+use App\Core\HandlerAbstract;
 use App\Entity\AmountType;
 use App\Entity\Ingredient;
 use App\Entity\IngredientToMeal;
 use App\Persisters\Core\DataPersisterExtension;
 
-class IngredientPersister extends DataPersisterExtension implements ContextAwareDataPersisterInterface
+class IngredientPersister extends HandlerAbstract implements ProcessorInterface
 {
     /**
      * @inheritDoc
@@ -19,12 +21,17 @@ class IngredientPersister extends DataPersisterExtension implements ContextAware
         return $data instanceof Ingredient;
     }
 
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
+    {
+        // TODO: Implement process() method.
+    }
+
     /**
      * @inheritDoc
      */
     public function persist($data, array $context = []): object
     {
-        return parent::persist($data, $context);
+//        return parent::persist($data, $context);
     }
 
     /**
@@ -32,7 +39,7 @@ class IngredientPersister extends DataPersisterExtension implements ContextAware
      */
     public function remove($data, array $context = []): void
     {
-        parent::remove($data, $context);
+//        parent::remove($data, $context);
     }
 
     public function prePersist($data, $context = []): void
