@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class UserExtension extends SoftDelete
 {
-    #[Orm\Column(name:'userId',type: 'integer')]
+    #[Orm\Column(name:'user_id',type: 'integer')]
     protected int $userId;
 
     /**

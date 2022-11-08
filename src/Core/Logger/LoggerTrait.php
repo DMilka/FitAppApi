@@ -8,4 +8,11 @@ trait LoggerTrait
     {
         error_log('[CRITICAL] ' . $message . ' : ' . $method);
     }
+
+    public function logDebug(string $message, string $method): void
+    {
+        if($_ENV['APP_ENV'] === 'dev') {
+            error_log('[DEBUG] ' . $message . ' : ' . $method);
+        }
+    }
 }

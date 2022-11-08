@@ -10,7 +10,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class HandlerAbstract extends AbstractController
+abstract class HandlerAbstract extends AbstractController
 {
     use HandlerDatabaseTrait, LoggerTrait;
 
