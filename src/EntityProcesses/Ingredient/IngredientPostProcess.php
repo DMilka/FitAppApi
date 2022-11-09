@@ -1,18 +1,18 @@
 <?php
 
-namespace App\EntityProcesses\AmountType;
+namespace App\EntityProcesses\Ingredient;
 
 use ApiPlatform\Metadata\Operation;
 use App\Core\Api\EntityProcessAbstract;
 use App\Core\Api\EntityProcessInterface;
 use App\Core\Exceptions\StandardExceptions\EmptyValueException;
 use App\Core\Exceptions\StandardExceptions\EntityProcessException;
-use App\Entity\AmountType;
+use App\Entity\Ingredient;
 
-class AmountTypePostProcess extends EntityProcessAbstract implements EntityProcessInterface
+class IngredientPostProcess extends EntityProcessAbstract implements EntityProcessInterface
 {
     /**
-     * @param AmountType $data
+     * @param Ingredient $data
      * @param Operation $operation
      * @param array $uriVariables
      * @param array $context
@@ -30,7 +30,7 @@ class AmountTypePostProcess extends EntityProcessAbstract implements EntityProce
     }
 
     /**
-     * @param AmountType $data
+     * @param Ingredient $data
      * @param Operation $operation
      * @param array $uriVariables
      * @param array $context

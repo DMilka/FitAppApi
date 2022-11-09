@@ -3,47 +3,38 @@
 namespace App\Entity;
 
 
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Core\Database\HelperEntity\UserExtension;
+use App\EntityProcesses\Ingredient\IngredientDeleteProcess;
+use App\EntityProcesses\Ingredient\IngredientPostProcess;
+use App\EntityProcesses\Ingredient\IngredientPutProcess;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 
-///**
-// * @ApiResource(
-// *      collectionOperations={
-// *          "get"={
-// *              "security"="is_granted('ROLE_INGREDIENT_GET')",
-// *              "normalization_context"={"groups"={"ingredient_read"}}
-// *          },
-// *          "post"={
-// *              "security"="is_granted('ROLE_INGREDIENT_POST')",
-// *              "normalization_context"={"groups"={"ingredient_read"}},
-// *              "denormalization_context"={"groups"={"ingredient_write"}}
-// *          },
-// *     },
-// *     itemOperations={
-// *          "get"={
-// *              "security"="is_granted('ROLE_INGREDIENT_GET')",
-// *              "normalization_context"={"groups"={"ingredient_read"}}
-// *          },
-// *          "put"={
-// *              "security"="is_granted('ROLE_INGREDIENT_PUT')",
-// *              "normalization_context"={"groups"={"ingredient_read"}},
-// *              "denormalization_context"={"groups"={"ingredient_update"}}
-// *          },
-// *          "delete"={
-// *              "security"="is_granted('ROLE_INGREDIENT_DELETE')",
-// *              "denormalization_context"={"groups"={"ingredient_delete"}}
-// *          }
-// *     }
-// * )
-// * @ORM\Entity(repositoryClass=IngredientRepository::class)
-// * @ApiFilter(SearchFilter::class, properties={"name": "ipartial", "description": "ipartial"})
-// * @ApiFilter(NumericFilter::class, properties={"amount","protein","carbohydrate","fat","calorie"})
-// * @ApiFilter(OrderFilter::class, properties={"id","name", "description","amount","protein","carbohydrate","fat","amount_type_id","calorie"}, arguments={"orderParameterName"="order"})
-// */
-
 #[ORM\Entity]
 #[ApiResource]
+#[Get(
+    security: "is_granted('ROLE_INGREDIENT_GET')",
+)]
+#[GetCollection(
+    security: "is_granted('ROLE_INGREDIENT_GET')",
+)]
+#[Post(
+    security: "is_granted('ROLE_INGREDIENT_POST')",
+    processor: IngredientPostProcess::class
+)]
+#[Put(
+    security: "is_granted('ROLE_INGREDIENT_PUT')",
+    processor: IngredientPutProcess::class
+)]
+#[Delete(
+    security: "is_granted('ROLE_INGREDIENT_DELETE', object)",
+    processor: IngredientDeleteProcess::class
+)]
 class Ingredient extends UserExtension
 {
 
