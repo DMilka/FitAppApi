@@ -2,9 +2,7 @@
 
 namespace App\Core\Exceptions\StandardExceptions;
 
-use ApiPlatform\Core\Exception\ExceptionInterface;
-
-class WrongValueException extends \LogicException implements ExceptionInterface
+class WrongValueException extends \LogicException
 {
     const MESSAGE = 'exception:message.wrong_value_given';
     const CODE = 404;

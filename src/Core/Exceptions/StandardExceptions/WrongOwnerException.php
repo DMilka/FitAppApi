@@ -2,11 +2,9 @@
 
 namespace App\Core\Exceptions\StandardExceptions;
 
-use ApiPlatform\Core\Exception\ExceptionInterface;
-
-class WrongOwnerException extends \LogicException implements ExceptionInterface
+class WrongOwnerException extends \LogicException
 {
     const MESSAGE = 'exception:message.internal_server_error';
-    const CODE = 404;
+    const CODE = 403;
 
 }

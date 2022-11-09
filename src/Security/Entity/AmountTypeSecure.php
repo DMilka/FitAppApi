@@ -16,8 +16,6 @@ public function prepareQueryForCollection(QueryBuilder $queryBuilder, QueryNameG
         if(!$this->checkResourceClass($this->getResourceClass())) {
             return;
         }
-
-
         $this->fillWithUserId($queryBuilder, $this->userHelper->getUser());
     }
 
@@ -26,7 +24,6 @@ public function prepareQueryForCollection(QueryBuilder $queryBuilder, QueryNameG
         if(!$this->checkResourceClass($this->getResourceClass())) {
             return;
         }
-
         $this->fillWithUserId($queryBuilder, $this->userHelper->getUser());
     }
 

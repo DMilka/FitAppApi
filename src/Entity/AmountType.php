@@ -7,46 +7,12 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
-use App\Core\Database\HelperEntity\SoftDelete;
+use ApiPlatform\Metadata\Put;
 use App\Core\Database\HelperEntity\UserExtension;
-use App\Persisters\AmountTypePersister;
-use App\Repository\AmountTypeRepository;
+use App\EntityProcesses\AmountType\AmountTypeDeleteProcess;
+use App\EntityProcesses\AmountType\AmountTypePostProcess;
+use App\EntityProcesses\AmountType\AmountTypePutProcess;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
-
-///**
-// * @ApiResource(
-// *      collectionOperations={
-// *          "get"={
-// *              "security"="is_granted('ROLE_AMOUNT_TYPE_GET')",
-// *              "normalization_context"={"groups"={"amount_type_read"}}
-// *          },
-// *          "post"={
-// *              "security"="is_granted('ROLE_AMOUNT_TYPE_POST')",
-// *              "normalization_context"={"groups"={"amount_type_read"}},
-// *              "denormalization_context"={"groups"={"amount_type_write"}}
-// *          },
-// *     },
-// *     itemOperations={
-// *          "get"={
-// *              "security"="is_granted('ROLE_AMOUNT_TYPE_GET')",
-// *              "normalization_context"={"groups"={"amount_type_read"}}
-// *          },
-// *          "put"={
-// *              "security"="is_granted('ROLE_AMOUNT_TYPE_PUT')",
-// *              "normalization_context"={"groups"={"amount_type_read"}},
-// *              "denormalization_context"={"groups"={"amount_type_update"}}
-// *          },
-// *          "delete"={
-// *              "security"="is_granted('ROLE_AMOUNT_TYPE_DELETE')",
-// *              "denormalization_context"={"groups"={"amount_type_delete"}}
-// *          }
-// *     }
-// * )
-// * @ORM\Entity(repositoryClass=AmountTypeRepository::class)
-// * @ApiFilter(SearchFilter::class, properties={"name": "ipartial", "description": "ipartial"})
-// * @ApiFilter(OrderFilter::class, properties={"id","name", "description"}, arguments={"orderParameterName"="order"})
-// */
 
 #[ORM\Entity]
 #[ApiResource]
@@ -58,11 +24,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 #[Post(
     security: "is_granted('ROLE_AMOUNT_TYPE_POST')",
-    processor: AmountTypePersister::class
+    processor: AmountTypePostProcess::class
+)]
+#[Put(
+    security: "is_granted('ROLE_AMOUNT_TYPE_PUT')",
+    processor: AmountTypePutProcess::class
 )]
 #[Delete(
     security: "is_granted('ROLE_AMOUNT_TYPE_DELETE', object)",
-    processor: AmountTypePersister::class
+    processor: AmountTypeDeleteProcess::class
 )]
 class AmountType extends UserExtension
 {

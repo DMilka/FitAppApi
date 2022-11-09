@@ -2,11 +2,10 @@
 
 namespace App\Core\Exceptions\StandardExceptions;
 
-use ApiPlatform\Core\Exception\ExceptionInterface;
 use LogicException;
 
-class EmptyValueException extends LogicException implements ExceptionInterface
+class EmptyValueException extends LogicException
 {
     const MESSAGE = 'exception:message.empty_value';
-    const CODE = 404;
+    const CODE = 500;
 }

@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Core\Exceptions\StandardExceptions\UserNotFound;
 use App\Core\Helpers\UserHelper;
 use App\Core\Logger\LoggerTrait;
 use App\Core\Database\HandlerDatabaseTrait;
@@ -65,6 +66,20 @@ abstract class HandlerAbstract extends AbstractController
     public function getUser(): Users
     {
         return $this->userHelper->getUser();
+    }
+
+    public function getUserId(): int
+    {
+        $user = $this->getUser();
+        if(!$user) {
+            throw new UserNotFound(UserNotFound::MESSAGE, UserNotFound::CODE);
+        }
+
+        if(!$user->getId()) {
+            throw new UserNotFound(UserNotFound::MESSAGE, UserNotFound::CODE);
+        }
+
+        return $user->getId();
     }
 
     public function getUserHelper(): UserHelper
