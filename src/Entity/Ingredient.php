@@ -37,7 +37,6 @@ use ApiPlatform\Metadata\ApiResource;
 )]
 class Ingredient extends UserExtension
 {
-
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
     private int $id;
 
