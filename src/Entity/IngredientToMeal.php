@@ -3,29 +3,37 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\EntityProcesses\IngredientToMeal\IngredientToMealDeleteProcess;
+use App\EntityProcesses\IngredientToMeal\IngredientToMealPostProcess;
+use App\EntityProcesses\IngredientToMeal\IngredientToMealPutProcess;
 use Doctrine\ORM\Mapping as ORM;
 use App\Core\Database\HelperEntity\SoftDelete;
-///**
-// * @ApiResource(
-// *      collectionOperations={
-// *          "get"={
-// *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
-// *              "normalization_context"={"groups"={"ingredient_to_meal_read"}}
-// *          }
-// *     },
-// *     itemOperations={
-// *          "get"={
-// *              "security"="is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
-// *              "normalization_context"={"groups"={"ingredient_to_meal_read"}}
-// *          }
-// *     }
-// * )
-// * @ORM\Entity(repositoryClass=IngredientToMealRepository::class)
-// * @ApiFilter(NumericFilter::class, properties={"mealId"})
-// */
 
 #[ORM\Entity]
 #[ApiResource]
+#[Get(
+    security: "is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
+)]
+#[GetCollection(
+    security: "is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
+)]
+#[Post(
+    security: "is_granted('ROLE_INGREDIENT_TO_MEAL_POST')",
+    processor: IngredientToMealPostProcess::class
+)]
+#[Put(
+    security: "is_granted('ROLE_INGREDIENT_TO_MEAL_PUT')",
+    processor: IngredientToMealPutProcess::class
+)]
+#[Delete(
+    security: "is_granted('ROLE_INGREDIENT_TO_MEAL_DELETE', object)",
+    processor: IngredientToMealDeleteProcess::class
+)]
 class IngredientToMeal extends SoftDelete
 {
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
