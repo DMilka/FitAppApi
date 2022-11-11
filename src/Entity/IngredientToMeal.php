@@ -11,10 +11,13 @@ use ApiPlatform\Metadata\Put;
 use App\EntityProcesses\IngredientToMeal\IngredientToMealDeleteProcess;
 use App\EntityProcesses\IngredientToMeal\IngredientToMealPostProcess;
 use App\EntityProcesses\IngredientToMeal\IngredientToMealPutProcess;
+use App\Repository\IngredientToMealRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Core\Database\HelperEntity\SoftDelete;
 
-#[ORM\Entity]
+#[ORM\Entity(
+    repositoryClass: IngredientToMealRepository::class
+)]
 #[ApiResource]
 #[Get(
     security: "is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
@@ -42,7 +45,7 @@ class IngredientToMeal extends SoftDelete
     #[Orm\Column(name:'ingredient_id',type: 'integer')]
     private int $ingredientId;
 
-    #[ORM\OneToMany(mappedBy: 'ingredientToMeal', targetEntity: Ingredient::class, cascade: ['persist'])]
+    #[ORM\OneToOne(mappedBy: 'ingredientToMeal', targetEntity: Ingredient::class, cascade: ['persist'])]
     private ?Ingredient $ingredient = null;
 
     #[Orm\Column(name:'meal_id', type: 'integer')]

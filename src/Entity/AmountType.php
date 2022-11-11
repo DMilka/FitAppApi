@@ -12,9 +12,12 @@ use App\Core\Database\HelperEntity\UserExtension;
 use App\EntityProcesses\AmountType\AmountTypeDeleteProcess;
 use App\EntityProcesses\AmountType\AmountTypePostProcess;
 use App\EntityProcesses\AmountType\AmountTypePutProcess;
+use App\Repository\AmountTypeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(
+    repositoryClass: AmountTypeRepository::class
+)]
 #[ApiResource]
 #[Get(
     security: "is_granted('ROLE_AMOUNT_TYPE_GET')",

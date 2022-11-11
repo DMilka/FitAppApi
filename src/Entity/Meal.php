@@ -11,10 +11,13 @@ use ApiPlatform\Metadata\Put;
 use App\EntityProcesses\Meal\MealDeleteProcess;
 use App\EntityProcesses\Meal\MealPostProcess;
 use App\EntityProcesses\Meal\MealPutProcess;
+use App\Repository\MealRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Core\Database\HelperEntity\UserExtension;
 
-#[ORM\Entity]
+#[ORM\Entity(
+    repositoryClass: MealRepository::class
+)]
 #[ApiResource]
 #[Get(
     security: "is_granted('ROLE_MEAL_GET')",
