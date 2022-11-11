@@ -8,6 +8,8 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Entity\Interfaces\NutritionalValuesInterface;
+use App\Entity\Traits\NutritionalValues;
 use App\EntityProcesses\Meal\MealDeleteProcess;
 use App\EntityProcesses\Meal\MealPostProcess;
 use App\EntityProcesses\Meal\MealPutProcess;
@@ -37,8 +39,10 @@ use App\Core\Database\HelperEntity\UserExtension;
     security: "is_granted('ROLE_MEAL_DELETE', object)",
     processor: MealDeleteProcess::class
 )]
-class Meal extends UserExtension
+class Meal extends UserExtension implements NutritionalValuesInterface
 {
+    use NutritionalValues;
+
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
     private ?int $id = null;
 
@@ -47,18 +51,6 @@ class Meal extends UserExtension
 
     #[Orm\Column(name:'description',type: 'string', nullable: true)]
     private ?string $description = null;
-
-    #[Orm\Column(name:'protein',type: 'float', nullable: true)]
-    private ?float $protein = null;
-
-    #[Orm\Column(name:'carbohydrate',type: 'float', nullable: true)]
-    private ?float $carbohydrate = null;
-
-    #[Orm\Column(name:'fat',type: 'float', nullable: true)]
-    private ?float $fat = null;
-
-    #[Orm\Column(name:'calorie',type: 'float', nullable: true)]
-    private ?float $calorie = null;
 
     public function getId(): ?int
     {

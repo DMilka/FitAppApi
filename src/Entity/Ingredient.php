@@ -3,18 +3,20 @@
 namespace App\Entity;
 
 
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Core\Database\HelperEntity\UserExtension;
+use App\Entity\Interfaces\NutritionalValuesInterface;
+use App\Entity\Traits\NutritionalValues;
 use App\EntityProcesses\Ingredient\IngredientDeleteProcess;
 use App\EntityProcesses\Ingredient\IngredientPostProcess;
 use App\EntityProcesses\Ingredient\IngredientPutProcess;
 use App\Repository\IngredientRepository;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource;
 
 #[ORM\Entity(
     repositoryClass: IngredientRepository::class
@@ -38,8 +40,10 @@ use ApiPlatform\Metadata\ApiResource;
     security: "is_granted('ROLE_INGREDIENT_DELETE', object)",
     processor: IngredientDeleteProcess::class
 )]
-class Ingredient extends UserExtension
+class Ingredient extends UserExtension implements NutritionalValuesInterface
 {
+    use NutritionalValues;
+
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
     private int $id;
 
@@ -51,18 +55,6 @@ class Ingredient extends UserExtension
 
     #[Orm\Column(name:'amount',type: 'float', nullable: true)]
     private ?float $amount = null;
-
-    #[Orm\Column(name:'protein',type: 'float', nullable: true)]
-    private ?float $protein = null;
-
-    #[Orm\Column(name:'carbohydrate',type: 'float', nullable: true)]
-    private ?float $carbohydrate = null;
-
-    #[Orm\Column(name:'fat',type: 'float', nullable: true)]
-    private ?float $fat = null;
-
-    #[Orm\Column(name:'calorie',type: 'float', nullable: true)]
-    private ?float $calorie = null;
 
     #[Orm\Column(name:'amount_type_id',type: 'integer', nullable: true)]
     private int $amountTypeId;
@@ -143,6 +135,42 @@ class Ingredient extends UserExtension
     }
 
     /**
+     * @return int
+     */
+    public function getAmountTypeId(): int
+    {
+        return $this->amountTypeId;
+    }
+
+    /**
+     * @param int $amountTypeId
+     * @return Ingredient
+     */
+    public function setAmountTypeId(int $amountTypeId): Ingredient
+    {
+        $this->amountTypeId = $amountTypeId;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDividerValue(): int
+    {
+        return $this->dividerValue;
+    }
+
+    /**
+     * @param int $dividerValue
+     * @return Ingredient
+     */
+    public function setDividerValue(int $dividerValue): Ingredient
+    {
+        $this->dividerValue = $dividerValue;
+        return $this;
+    }
+
+    /**
      * @return float|null
      */
     public function getProtein(): ?float
@@ -213,42 +241,4 @@ class Ingredient extends UserExtension
         $this->calorie = $calorie;
         return $this;
     }
-
-    /**
-     * @return int
-     */
-    public function getAmountTypeId(): int
-    {
-        return $this->amountTypeId;
-    }
-
-    /**
-     * @param int $amountTypeId
-     * @return Ingredient
-     */
-    public function setAmountTypeId(int $amountTypeId): Ingredient
-    {
-        $this->amountTypeId = $amountTypeId;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDividerValue(): int
-    {
-        return $this->dividerValue;
-    }
-
-    /**
-     * @param int $dividerValue
-     * @return Ingredient
-     */
-    public function setDividerValue(int $dividerValue): Ingredient
-    {
-        $this->dividerValue = $dividerValue;
-        return $this;
-    }
-
-
 }
