@@ -8,6 +8,7 @@ use App\Core\Api\EntityProcessInterface;
 use App\Core\Exceptions\StandardExceptions\EntityProcessException;
 use App\Core\Exceptions\StandardExceptions\ItemNotFoundException;
 use App\Core\Exceptions\StandardExceptions\WrongOwnerException;
+use App\Core\Exceptions\StandardExceptions\WrongValueException;
 use App\Entity\IngredientToMeal;
 use App\Entity\Meal;
 
@@ -45,6 +46,10 @@ class IngredientToMealPostProcess extends EntityProcessAbstract implements Entit
 
         if($this->getUserId() !== $ingredient->getUserId()) {
             throw new WrongOwnerException(WrongOwnerException::MESSAGE, WrongOwnerException::CODE);
+        }
+
+        if($data->getAmount() === 0 || $data->getAmount() === null) {
+            throw new WrongValueException(WrongValueException::MESSAGE, WrongValueException::CODE);
         }
     }
 

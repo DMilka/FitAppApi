@@ -20,13 +20,8 @@ class MealPutProcess extends EntityProcessAbstract implements EntityProcessInter
      */
     public function executePreProcess(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
-        if(!$data->getName()) {
-            throw new EmptyValueException(EmptyValueException::MESSAGE, EmptyValueException::CODE);
-        }
-        $data->setName(trim($data->getName()));
-        if($data->getDescription()) {
-            $data->setDescription(trim($data->getDescription()));
-        }
+        $this->validateName($data);
+        $this->validateDescription($data);
     }
 
     /**
@@ -46,6 +41,29 @@ class MealPutProcess extends EntityProcessAbstract implements EntityProcessInter
             $this->logCritical($exception->getMessage(), __METHOD__);
             $this->getManager()->rollback();
             throw new EntityProcessException(EntityProcessException::MESSAGE, EntityProcessException::CODE);
+        }
+    }
+
+    /**
+     * @param Meal $data
+     * @return void
+     */
+    protected function validateName(Meal $data): void
+    {
+        if(!$data->getName()) {
+            throw new EmptyValueException(EmptyValueException::MESSAGE, EmptyValueException::CODE);
+        }
+        $data->setName(trim($data->getName()));
+    }
+
+    /**
+     * @param Meal $data
+     * @return void
+     */
+    protected function validateDescription(Meal $data): void
+    {
+        if($data->getDescription()) {
+            $data->setDescription(trim($data->getDescription()));
         }
     }
 }
