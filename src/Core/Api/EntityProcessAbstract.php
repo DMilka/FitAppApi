@@ -5,6 +5,7 @@ namespace App\Core\Api;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Core\Database\HelperEntity\UserExtension;
+use App\Core\Exceptions\StandardExceptions\EntityProcessException;
 use App\Core\Exceptions\StandardExceptions\WrongOwnerException;
 use App\Core\HandlerAbstract;
 use App\Core\Helpers\DateHelper;
@@ -17,10 +18,21 @@ class EntityProcessAbstract extends HandlerAbstract implements ProcessorInterfac
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-        $this->checkUserExtensionOnEntity($data, $operation, $uriVariables, $context);
-        $this->executePreProcess($data, $operation, $uriVariables, $context);
-        $this->executeProcess($data, $operation, $uriVariables, $context);
-        $this->executePostProcess($data, $operation, $uriVariables, $context);
+        try {
+            $this->getManager()->beginTransaction();
+
+            $this->checkUserExtensionOnEntity($data, $operation, $uriVariables, $context);
+            $this->executePreProcess($data, $operation, $uriVariables, $context);
+
+            $this->executeProcess($data, $operation, $uriVariables, $context);
+
+            $this->executePostProcess($data, $operation, $uriVariables, $context);
+
+        } catch (\Exception $exception) {
+            $this->logCritical($exception->getMessage(), __METHOD__);
+            $this->getManager()->rollback();
+            throw new EntityProcessException(EntityProcessException::MESSAGE, EntityProcessException::CODE);
+        }
 
         return $data;
     }
@@ -34,6 +46,9 @@ class EntityProcessAbstract extends HandlerAbstract implements ProcessorInterfac
     {
         $now = DateHelper::getActualDateString();
         $this->logDebug(sprintf('[%s] Executed process', $now),__METHOD__);
+        $this->getManager()->persist($data);
+        $this->getManager()->flush();
+        $this->getManager()->commit();
     }
     public function executePostProcess(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {

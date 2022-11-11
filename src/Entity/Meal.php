@@ -48,6 +48,18 @@ class Meal extends UserExtension
     #[Orm\Column(name:'description',type: 'string', nullable: true)]
     private ?string $description = null;
 
+    #[Orm\Column(name:'protein',type: 'float', nullable: true)]
+    private ?float $protein = null;
+
+    #[Orm\Column(name:'carbohydrate',type: 'float', nullable: true)]
+    private ?float $carbohydrate = null;
+
+    #[Orm\Column(name:'fat',type: 'float', nullable: true)]
+    private ?float $fat = null;
+
+    #[Orm\Column(name:'calorie',type: 'float', nullable: true)]
+    private ?float $calorie = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -80,6 +92,78 @@ class Meal extends UserExtension
     public function setDescription(?string $description): Meal
     {
         $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getProtein(): ?float
+    {
+        return $this->protein;
+    }
+
+    /**
+     * @param float|null $protein
+     * @return Meal
+     */
+    public function setProtein(?float $protein): Meal
+    {
+        $this->protein = $protein;
+        return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getCarbohydrate(): ?float
+    {
+        return $this->carbohydrate;
+    }
+
+    /**
+     * @param float|null $carbohydrate
+     * @return Meal
+     */
+    public function setCarbohydrate(?float $carbohydrate): Meal
+    {
+        $this->carbohydrate = $carbohydrate;
+        return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getFat(): ?float
+    {
+        return $this->fat;
+    }
+
+    /**
+     * @param float|null $fat
+     * @return Meal
+     */
+    public function setFat(?float $fat): Meal
+    {
+        $this->fat = $fat;
+        return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getCalorie(): ?float
+    {
+        return $this->calorie;
+    }
+
+    /**
+     * @param float|null $calorie
+     * @return Meal
+     */
+    public function setCalorie(?float $calorie): Meal
+    {
+        $this->calorie = $calorie;
         return $this;
     }
 }

@@ -51,6 +51,8 @@ class IngredientToMealPostProcess extends EntityProcessAbstract implements Entit
         if($data->getAmount() === 0 || $data->getAmount() === null) {
             throw new WrongValueException(WrongValueException::MESSAGE, WrongValueException::CODE);
         }
+
+        $data->setIngredient($ingredient);
     }
 
     /**
@@ -62,15 +64,49 @@ class IngredientToMealPostProcess extends EntityProcessAbstract implements Entit
      */
     public function executeProcess(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
-        try {
-            $this->getManager()->beginTransaction();
-            $this->getManager()->persist($data);
-            $this->getManager()->flush();
-            $this->getManager()->commit();
-        } catch (\Exception $exception) {
-            $this->logCritical($exception->getMessage(), __METHOD__);
-            $this->getManager()->rollback();
-            throw new EntityProcessException(EntityProcessException::MESSAGE, EntityProcessException::CODE);
+        parent::executeProcess($data, $operation, $uriVariables, $context);
+    }
+
+    /**
+     * @param IngredientToMeal $data
+     * @param Operation $operation
+     * @param array $uriVariables
+     * @param array $context
+     * @return void
+     */
+    public function executePostProcess(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
+    {
+        $mealId = $data->getMealId();
+        /**
+         * @var Meal $meal
+         */
+        $meal = $this->getMealRepository()->find($mealId);
+
+        if($meal) {
+            $ingredient = $data->getIngredient();
+
+            $multiplier = 1;
+            if($data->getAmount() !== $ingredient->getAmount()) {
+                $multiplier = $data->getAmount() / $ingredient->getAmount();
+            }
+
+            $sumProtein = $ingredient->getProtein() * $multiplier;
+            $sumCarbohydrate = $ingredient->getCarbohydrate() * $multiplier;
+            $sumFat = $ingredient->getFat() * $multiplier;
+            $sumCalorie = $ingredient->getCalorie() * $multiplier;
+
+            $meal->setProtein($meal->getProtein() + $sumProtein);
+            $meal->setCarbohydrate($meal->getCarbohydrate() + $sumCarbohydrate);
+            $meal->setFat($meal->getFat() + $sumFat);
+            $meal->setCalorie($meal->getCalorie() + $sumCalorie);
+
+            try {
+                $this->getManager()->flush();
+            } catch (\Exception $exception) {
+                $this->logCritical($exception->getMessage(), __METHOD__);
+                $this->getManager()->rollback();
+                throw new EntityProcessException(EntityProcessException::MESSAGE, EntityProcessException::CODE);
+            }
         }
     }
 }

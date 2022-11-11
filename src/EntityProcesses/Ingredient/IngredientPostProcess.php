@@ -6,7 +6,6 @@ use ApiPlatform\Metadata\Operation;
 use App\Core\Api\EntityProcessAbstract;
 use App\Core\Api\EntityProcessInterface;
 use App\Core\Exceptions\StandardExceptions\EmptyValueException;
-use App\Core\Exceptions\StandardExceptions\EntityProcessException;
 use App\Entity\Ingredient;
 
 class IngredientPostProcess extends EntityProcessAbstract implements EntityProcessInterface
@@ -38,15 +37,6 @@ class IngredientPostProcess extends EntityProcessAbstract implements EntityProce
      */
     public function executeProcess(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
-        try {
-            $this->getManager()->beginTransaction();
-            $this->getManager()->persist($data);
-            $this->getManager()->flush();
-            $this->getManager()->commit();
-        } catch (\Exception $exception) {
-            $this->logCritical($exception->getMessage(), __METHOD__);
-            $this->getManager()->rollback();
-            throw new EntityProcessException(EntityProcessException::MESSAGE, EntityProcessException::CODE);
-        }
+        parent::executeProcess($data, $operation, $uriVariables, $context);
     }
 }

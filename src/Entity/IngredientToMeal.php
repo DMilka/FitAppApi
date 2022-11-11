@@ -45,7 +45,7 @@ class IngredientToMeal extends SoftDelete
     #[Orm\Column(name:'ingredient_id',type: 'integer')]
     private int $ingredientId;
 
-    #[ORM\OneToOne(mappedBy: 'ingredientToMeal', targetEntity: Ingredient::class, cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: Ingredient::class, cascade: ['persist'])]
     private ?Ingredient $ingredient = null;
 
     #[Orm\Column(name:'meal_id', type: 'integer')]
