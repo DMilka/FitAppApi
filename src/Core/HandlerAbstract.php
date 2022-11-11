@@ -8,6 +8,7 @@ use App\Core\Logger\LoggerTrait;
 use App\Core\Database\HandlerDatabaseTrait;
 use App\Entity\Users;
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -24,10 +25,11 @@ abstract class HandlerAbstract extends AbstractController
     /** @var UserHelper $userHelper */
     private UserHelper $userHelper;
 
-    public function __construct(ManagerRegistry $managerRegistry, EventDispatcherInterface $eventDispatcher, UserHelper $userHelper)
+    public function __construct(ManagerRegistry $managerRegistry, LoggerInterface $logger, EventDispatcherInterface $eventDispatcher, UserHelper $userHelper)
     {
         $this->managerRegistry = $managerRegistry;
         $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $logger;
         $this->userHelper = $userHelper;
     }
 
