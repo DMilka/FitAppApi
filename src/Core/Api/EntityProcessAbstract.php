@@ -27,7 +27,6 @@ class EntityProcessAbstract extends HandlerAbstract implements ProcessorInterfac
             $this->executeProcess($data, $operation, $uriVariables, $context);
 
             $this->executePostProcess($data, $operation, $uriVariables, $context);
-
         } catch (\Exception $exception) {
             $this->logCritical($exception->getMessage(), __METHOD__);
             $this->getManager()->rollback();
@@ -46,7 +45,9 @@ class EntityProcessAbstract extends HandlerAbstract implements ProcessorInterfac
     {
         $now = DateHelper::getActualDateString();
         $this->logDebug(sprintf('[%s] Executed process', $now),__METHOD__);
-        $this->getManager()->persist($data);
+        if($operation->getMethod() === self::POST_METHOD) {
+            $this->getManager()->persist($data);
+        }
         $this->getManager()->flush();
         $this->getManager()->commit();
     }

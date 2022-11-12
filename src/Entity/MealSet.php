@@ -3,49 +3,45 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Core\Database\EntityTraits\EntityConnectorCreatorTrait;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Core\Database\HelperEntity\UserExtension;
+use App\Entity\Interfaces\NutritionalValuesInterface;
+use App\Entity\Traits\NutritionalValues;
+use App\EntityProcesses\MealSet\MealSetDeleteProcess;
+use App\EntityProcesses\MealSet\MealSetPostProcess;
+use App\EntityProcesses\MealSet\MealSetPutProcess;
+use App\Repository\MealSetRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-///**
-// * @ApiResource(
-// *      collectionOperations={
-// *          "get"={
-// *              "security"="is_granted('ROLE_MEAL_SET_GET')",
-// *              "normalization_context"={"groups"={"meal_set_read"}}
-// *          },
-// *          "post"={
-// *              "security"="is_granted('ROLE_MEAL_SET_POST')",
-// *              "normalization_context"={"groups"={"meal_set_read","entity_connector_creator_read"}},
-// *              "denormalization_context"={"groups"={"meal_set_write","entity_connector_creator_write"}}
-// *          },
-// *     },
-// *     itemOperations={
-// *          "get"={
-// *              "security"="is_granted('ROLE_MEAL_SET_GET')",
-// *              "normalization_context"={"groups"={"meal_set_read"}}
-// *          },
-// *          "put"={
-// *              "security"="is_granted('ROLE_MEAL_SET_PUT')",
-// *              "normalization_context"={"groups"={"meal_set_read","entity_connector_creator_read"}},
-// *              "denormalization_context"={"groups"={"meal_set_update","entity_connector_creator_update"}}
-// *          },
-// *          "delete"={
-// *              "security"="is_granted('ROLE_MEAL_SET_DELETE')",
-// *              "denormalization_context"={"groups"={"meal_set_delete"}}
-// *          }
-// *     }
-// * )
-// * @ORM\Entity(repositoryClass=MealSetRepository::class)
-// * @ApiFilter(SearchFilter::class, properties={"name": "ipartial", "description": "ipartial"})
-// * @ApiFilter(OrderFilter::class, properties={"name", "description"})
-// */
-
-#[ORM\Entity]
+#[ORM\Entity(
+    repositoryClass: MealSetRepository::class
+)]
 #[ApiResource]
-class MealSet extends UserExtension
+#[Get(
+    security: "is_granted('ROLE_MEAL_SET_GET')",
+)]
+#[GetCollection(
+    security: "is_granted('ROLE_MEAL_SET_GET')",
+)]
+#[Post(
+    security: "is_granted('ROLE_MEAL_SET_POST')",
+    processor: MealSetPostProcess::class
+)]
+#[Put(
+    security: "is_granted('ROLE_MEAL_SET_PUT')",
+    processor: MealSetPutProcess::class
+)]
+#[Delete(
+    security: "is_granted('ROLE_MEAL_SET_DELETE', object)",
+    processor: MealSetDeleteProcess::class
+)]
+class MealSet extends UserExtension implements NutritionalValuesInterface
 {
-    use EntityConnectorCreatorTrait;
+    use NutritionalValues;
 
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
     private ?int $id = null;
@@ -92,20 +88,74 @@ class MealSet extends UserExtension
     }
 
     /**
-     * @return string|null
+     * @return float|null
      */
-    public function getMealIds(): ?string
+    public function getProtein(): ?float
     {
-        return $this->mealIds;
+        return $this->protein;
     }
 
     /**
-     * @param string|null $mealIds
+     * @param float|null $protein
      * @return MealSet
      */
-    public function setMealIds(?string $mealIds): MealSet
+    public function setProtein(?float $protein): MealSet
     {
-        $this->mealIds = $mealIds;
+        $this->protein = $protein;
+        return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getCarbohydrate(): ?float
+    {
+        return $this->carbohydrate;
+    }
+
+    /**
+     * @param float|null $carbohydrate
+     * @return MealSet
+     */
+    public function setCarbohydrate(?float $carbohydrate): MealSet
+    {
+        $this->carbohydrate = $carbohydrate;
+        return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getFat(): ?float
+    {
+        return $this->fat;
+    }
+
+    /**
+     * @param float|null $fat
+     * @return MealSet
+     */
+    public function setFat(?float $fat): MealSet
+    {
+        $this->fat = $fat;
+        return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getCalorie(): ?float
+    {
+        return $this->calorie;
+    }
+
+    /**
+     * @param float|null $calorie
+     * @return MealSet
+     */
+    public function setCalorie(?float $calorie): MealSet
+    {
+        $this->calorie = $calorie;
         return $this;
     }
 }

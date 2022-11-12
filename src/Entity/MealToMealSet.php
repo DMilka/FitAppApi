@@ -3,45 +3,40 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Core\Database\HelperEntity\SoftDelete;
+use App\EntityProcesses\MealToMealSet\MealToMealSetDeleteProcess;
+use App\EntityProcesses\MealToMealSet\MealToMealSetPostProcess;
+use App\EntityProcesses\MealToMealSet\MealToMealSetPutProcess;
+use App\Repository\MealToMealSetRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
-///**
-// * @ApiResource(
-// *      collectionOperations={
-// *          "get"={
-// *              "security"="is_granted('ROLE_MEAL_TO_MEAL_SET_GET')",
-// *              "normalization_context"={"groups"={"meal_to_meal_set_read"}}
-// *          },
-// *          "post"={
-// *              "security"="is_granted('ROLE_MEAL_TO_MEAL_SET_POST')",
-// *              "normalization_context"={"groups"={"meal_to_meal_set_read"}},
-// *              "denormalization_context"={"groups"={"meal_to_meal_set_write"}}
-// *          },
-// *     },
-// *     itemOperations={
-// *          "get"={
-// *              "security"="is_granted('ROLE_MEAL_TO_MEAL_SET_GET')",
-// *              "normalization_context"={"groups"={"meal_to_meal_set_read"}}
-// *          },
-// *          "put"={
-// *              "security"="is_granted('ROLE_MEAL_TO_MEAL_SET_PUT')",
-// *              "normalization_context"={"groups"={"meal_to_meal_set_read"}},
-// *              "denormalization_context"={"groups"={"meal_to_meal_set_update"}}
-// *          },
-// *          "delete"={
-// *              "security"="is_granted('ROLE_MEAL_TO_MEAL_SET_DELETE')",
-// *              "denormalization_context"={"groups"={"meal_set_delete"}}
-// *          }
-// *     }
-// * )
-// * @ORM\Entity(repositoryClass=MealToMealSetRepository::class)
-// * @ApiFilter(NumericFilter::class, properties={"mealSetId"})
-// */
-
-#[ORM\Entity]
+#[ORM\Entity(
+    repositoryClass: MealToMealSetRepository::class
+)]
 #[ApiResource]
+#[Get(
+    security: "is_granted('ROLE_MEAL_SET_GET')",
+)]
+#[GetCollection(
+    security: "is_granted('ROLE_MEAL_SET_GET')",
+)]
+#[Post(
+    security: "is_granted('ROLE_MEAL_SET_POST')",
+    processor: MealToMealSetPostProcess::class
+)]
+#[Put(
+    security: "is_granted('ROLE_MEAL_SET_PUT')",
+    processor: MealToMealSetPutProcess::class
+)]
+#[Delete(
+    security: "is_granted('ROLE_MEAL_SET_DELETE', object)",
+    processor: MealToMealSetDeleteProcess::class
+)]
 class MealToMealSet extends SoftDelete
 {
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
@@ -53,13 +48,13 @@ class MealToMealSet extends SoftDelete
     #[Orm\Column(name:'meal_id',type: 'integer',nullable: true)]
     private ?int $mealId = null;
 
-    #[ORM\OneToMany(mappedBy: 'mealToMealSet', targetEntity: Meal::class, cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: Meal::class, cascade: ['persist'])]
     private ?Meal $meal = null;
 
     #[Orm\Column(name:'ingredient_id',type: 'integer',nullable: true)]
     private ?int $ingredientId = null;
 
-    #[ORM\OneToMany(mappedBy: 'mealToMealSet', targetEntity: Ingredient::class, cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: Ingredient::class, cascade: ['persist'])]
     private ?Ingredient $ingredient = null;
 
     #[Orm\Column(name:'amount',type: 'string', nullable: true)]
