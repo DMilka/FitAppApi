@@ -3,46 +3,41 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\EntityProcesses\Training\TrainingDeleteProcess;
+use App\EntityProcesses\Training\TrainingPostProcess;
+use App\EntityProcesses\Training\TrainingPutProcess;
+use App\Repository\TrainingRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 use App\Core\Database\HelperEntity\UserExtension;
 
-///**
-// * @ApiResource(
-// *      collectionOperations={
-// *          "get"={
-// *              "security"="is_granted('ROLE_TRAINING_GET')",
-// *              "normalization_context"={"groups"={"training_read"}}
-// *          },
-// *          "post"={
-// *              "security"="is_granted('ROLE_TRAINING_POST')",
-// *              "normalization_context"={"groups"={"training_read"}},
-// *              "denormalization_context"={"groups"={"training_write"}}
-// *          },
-// *     },
-// *     itemOperations={
-// *          "get"={
-// *              "security"="is_granted('ROLE_TRAINING_GET')",
-// *              "normalization_context"={"groups"={"training_read"}}
-// *          },
-// *          "put"={
-// *              "security"="is_granted('ROLE_TRAINING_PUT')",
-// *              "normalization_context"={"groups"={"training_read"}},
-// *              "denormalization_context"={"groups"={"training_update"}}
-// *          },
-// *          "delete"={
-// *              "security"="is_granted('ROLE_TRAINING_DELETE')",
-// *              "denormalization_context"={"groups"={"training_delete"}}
-// *          }
-// *     }
-// * )
-// * @ORM\Entity(repositoryClass=TrainingRepository::class)
-// * @ApiFilter(SearchFilter::class, properties={"name": "ipartial", "description": "ipartial"})
-// * @ApiFilter(OrderFilter::class, properties={"id","name", "description"}, arguments={"orderParameterName"="order"})
-// */
-
-#[ORM\Entity]
+#[ORM\Entity(
+    repositoryClass: TrainingRepository::class
+)]
 #[ApiResource]
+#[Get(
+    security: "is_granted('ROLE_TRAINING_GET')",
+)]
+#[GetCollection(
+    security: "is_granted('ROLE_TRAINING_GET')",
+)]
+#[Post(
+    security: "is_granted('ROLE_TRAINING_POST')",
+    processor: TrainingPostProcess::class
+)]
+#[Put(
+    security: "is_granted('ROLE_TRAINING_PUT')",
+    processor: TrainingPutProcess::class
+)]
+#[Delete(
+    security: "is_granted('ROLE_TRAINING_DELETE', object)",
+    processor: TrainingDeleteProcess::class
+)]
 class Training extends UserExtension
 {
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
@@ -65,7 +60,7 @@ class Training extends UserExtension
     }
 
     /**
-     * @param string|null $name
+     * @param string $name
      * @return Training
      */
     public function setName(string $name): Training
