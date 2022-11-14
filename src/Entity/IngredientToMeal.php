@@ -14,44 +14,56 @@ use App\EntityProcesses\IngredientToMeal\IngredientToMealPutProcess;
 use App\Repository\IngredientToMealRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Core\Database\HelperEntity\SoftDelete;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(
     repositoryClass: IngredientToMealRepository::class
 )]
 #[ApiResource]
 #[Get(
+    normalizationContext: ['groups' => ['ingredient_to_meal_read']],
     security: "is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
 )]
 #[GetCollection(
+    normalizationContext: ['groups' => ['ingredient_to_meal_read']],
     security: "is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
 )]
 #[Post(
+    normalizationContext: ['groups' => ['ingredient_to_meal_read']],
+    denormalizationContext: ['groups' => ['ingredient_to_meal_write']],
     security: "is_granted('ROLE_INGREDIENT_TO_MEAL_POST')",
     processor: IngredientToMealPostProcess::class
 )]
 #[Put(
+    normalizationContext: ['groups' => ['ingredient_to_meal_read']],
+    denormalizationContext: ['groups' => ['ingredient_to_meal_update']],
     security: "is_granted('ROLE_INGREDIENT_TO_MEAL_PUT')",
     processor: IngredientToMealPutProcess::class
 )]
 #[Delete(
+    denormalizationContext: ['groups' => ['ingredient_to_meal_remove']],
     security: "is_granted('ROLE_INGREDIENT_TO_MEAL_DELETE', object)",
     processor: IngredientToMealDeleteProcess::class
 )]
 class IngredientToMeal extends SoftDelete
 {
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
+    #[Groups(['ingredient_to_meal_read', 'ingredient_to_meal_write','ingredient_to_meal_update', 'ingredient_to_meal_remove'])]
     private ?int $id = null;
 
     #[Orm\Column(name:'ingredient_id',type: 'integer')]
     private int $ingredientId;
 
     #[ORM\OneToOne(targetEntity: Ingredient::class, cascade: ['persist'])]
+    #[Groups(['ingredient_to_meal_read', 'ingredient_to_meal_write','ingredient_to_meal_update', 'ingredient_to_meal_remove'])]
     private ?Ingredient $ingredient = null;
 
     #[Orm\Column(name:'meal_id', type: 'integer')]
+    #[Groups(['ingredient_to_meal_read', 'ingredient_to_meal_write','ingredient_to_meal_update', 'ingredient_to_meal_remove'])]
     private int $mealId;
 
     #[Orm\Column(name:'amount',type: 'integer')]
+    #[Groups(['ingredient_read', 'ingredient_write', 'ingredient_update', 'ingredient_remove', 'ingredient_to_meal_read'])]
     private int $amount = 0;
 
     public function getId(): ?int

@@ -17,26 +17,34 @@ use App\EntityProcesses\Ingredient\IngredientPostProcess;
 use App\EntityProcesses\Ingredient\IngredientPutProcess;
 use App\Repository\IngredientRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(
     repositoryClass: IngredientRepository::class
 )]
 #[ApiResource]
 #[Get(
+    normalizationContext: ['groups' => ['ingredient_read']],
     security: "is_granted('ROLE_INGREDIENT_GET')",
 )]
 #[GetCollection(
+    normalizationContext: ['groups' => ['ingredient_read']],
     security: "is_granted('ROLE_INGREDIENT_GET')",
 )]
 #[Post(
+    normalizationContext: ['groups' => ['ingredient_read']],
+    denormalizationContext: ['groups' => ['ingredient_write']],
     security: "is_granted('ROLE_INGREDIENT_POST')",
     processor: IngredientPostProcess::class
 )]
 #[Put(
+    normalizationContext: ['groups' => ['ingredient_read']],
+    denormalizationContext: ['groups' => ['ingredient_update']],
     security: "is_granted('ROLE_INGREDIENT_PUT')",
     processor: IngredientPutProcess::class
 )]
 #[Delete(
+    denormalizationContext: ['groups' => ['ingredient_remove']],
     security: "is_granted('ROLE_INGREDIENT_DELETE', object)",
     processor: IngredientDeleteProcess::class
 )]
@@ -45,21 +53,26 @@ class Ingredient extends UserExtension implements NutritionalValuesInterface
     use NutritionalValues;
 
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
+    #[Groups(['ingredient_read'])]
     private int $id;
 
     #[Orm\Column(name:'name',type: 'string')]
+    #[Groups(['ingredient_read', 'ingredient_write', 'ingredient_update', 'ingredient_remove', 'ingredient_to_meal_read'])]
     private string $name;
 
-    #[Orm\Column(name:'description',type: 'float', nullable: true)]
-    private ?float $description = null;
+    #[Orm\Column(name:'description',type: 'string', nullable: true)]
+    #[Groups(['ingredient_read', 'ingredient_write', 'ingredient_update', 'ingredient_remove', 'ingredient_to_meal_read'])]
+    private ?string $description = null;
 
     #[Orm\Column(name:'amount',type: 'float', nullable: true)]
+    #[Groups(['ingredient_read', 'ingredient_write', 'ingredient_update', 'ingredient_remove', 'ingredient_to_meal_read'])]
     private ?float $amount = null;
 
     #[Orm\Column(name:'amount_type_id',type: 'integer', nullable: true)]
+    #[Groups(['ingredient_read', 'ingredient_write', 'ingredient_update', 'ingredient_remove', 'ingredient_to_meal_read'])]
     private int $amountTypeId;
 
-    #[Orm\Column(name:'divider_value',type: 'string')]
+    #[Orm\Column(name:'divider_value',type: 'integer')]
     private int $dividerValue = 100;
 
     /**
@@ -99,18 +112,18 @@ class Ingredient extends UserExtension implements NutritionalValuesInterface
     }
 
     /**
-     * @return float|null
+     * @return string|null
      */
-    public function getDescription(): ?float
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
     /**
-     * @param float|null $description
+     * @param string|null $description
      * @return Ingredient
      */
-    public function setDescription(?float $description): Ingredient
+    public function setDescription(?string $description): Ingredient
     {
         $this->description = $description;
         return $this;
