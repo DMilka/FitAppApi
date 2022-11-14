@@ -27,16 +27,4 @@ class IngredientPostProcess extends EntityProcessAbstract implements EntityProce
             $data->setDescription(trim($data->getDescription()));
         }
     }
-
-    /**
-     * @param Ingredient $data
-     * @param Operation $operation
-     * @param array $uriVariables
-     * @param array $context
-     * @return void
-     */
-    public function executeProcess(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
-    {
-        parent::executeProcess($data, $operation, $uriVariables, $context);
-    }
 }

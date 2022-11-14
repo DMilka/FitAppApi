@@ -27,16 +27,4 @@ class MealPostProcess extends EntityProcessAbstract implements EntityProcessInte
             $data->setDescription(trim($data->getDescription()));
         }
     }
-
-    /**
-     * @param Meal $data
-     * @param Operation $operation
-     * @param array $uriVariables
-     * @param array $context
-     * @return void
-     */
-    public function executeProcess(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
-    {
-        parent::executeProcess($data, $operation, $uriVariables, $context);
-    }
 }

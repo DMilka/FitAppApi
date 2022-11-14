@@ -55,18 +55,6 @@ class IngredientToMealPutProcess extends EntityProcessAbstract implements Entity
      * @param array $context
      * @return void
      */
-    public function executeProcess(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
-    {
-
-    }
-
-    /**
-     * @param IngredientToMeal $data
-     * @param Operation $operation
-     * @param array $uriVariables
-     * @param array $context
-     * @return void
-     */
     public function executePostProcess(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
         $mealId = $data->getMealId();

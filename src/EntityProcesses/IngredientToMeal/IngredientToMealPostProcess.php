@@ -62,18 +62,6 @@ class IngredientToMealPostProcess extends EntityProcessAbstract implements Entit
      * @param array $context
      * @return void
      */
-    public function executeProcess(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
-    {
-        parent::executeProcess($data, $operation, $uriVariables, $context);
-    }
-
-    /**
-     * @param IngredientToMeal $data
-     * @param Operation $operation
-     * @param array $uriVariables
-     * @param array $context
-     * @return void
-     */
     public function executePostProcess(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
         $mealId = $data->getMealId();

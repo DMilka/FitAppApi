@@ -4,12 +4,13 @@ namespace App\EntityProcesses\IngredientToMeal;
 
 use ApiPlatform\Metadata\Operation;
 use App\Core\Api\EntityProcessAbstract;
+use App\Core\Api\EntityProcessInterface;
 use App\Core\Exceptions\StandardExceptions\EntityProcessException;
 use App\Core\Helpers\DateHelper;
 use App\Entity\IngredientToMeal;
 use App\Entity\Meal;
 
-class IngredientToMealDeleteProcess extends EntityProcessAbstract
+class IngredientToMealDeleteProcess extends EntityProcessAbstract implements EntityProcessInterface
 {
     /**
      * @param IngredientToMeal $data
@@ -18,21 +19,10 @@ class IngredientToMealDeleteProcess extends EntityProcessAbstract
      * @param array $context
      * @return void
      */
-    public function executeProcess(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
+    public function executePreProcess(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
-        try {
-            $this->getManager()->beginTransaction();
-
-            $data->setDeleted(true);
-            $data->setDeletedAt(DateHelper::getActualDate());
-
-            $this->getManager()->flush();
-            $this->getManager()->commit();
-        } catch (\Exception $exception) {
-            $this->logCritical($exception->getMessage(), __METHOD__);
-            $this->getManager()->rollback();
-            throw new EntityProcessException(EntityProcessException::MESSAGE, EntityProcessException::CODE);
-        }
+        $data->setDeleted(true);
+        $data->setDeletedAt(DateHelper::getActualDate());
     }
 
     public function executePostProcess(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
