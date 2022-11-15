@@ -14,50 +14,65 @@ use App\EntityProcesses\TrainingToTrainingSet\TrainingToTrainingSetPostProcess;
 use App\EntityProcesses\TrainingToTrainingSet\TrainingToTrainingSetPutProcess;
 use App\Repository\TrainingToTrainingSetRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(
     repositoryClass: TrainingToTrainingSetRepository::class
 )]
 #[ApiResource]
 #[Get(
+    normalizationContext: ['groups' => ['training_to_training_set_get']],
     security: "is_granted('ROLE_TRAINING_TO_TRAINING_SET_GET')",
 )]
 #[GetCollection(
+    normalizationContext: ['groups' => ['training_to_training_set_get']],
     security: "is_granted('ROLE_TRAINING_TO_TRAINING_SET_GET')",
 )]
 #[Post(
+    normalizationContext: ['groups' => ['training_to_training_set_get']],
+    denormalizationContext: ['groups' => ['training_to_training_set_post']],
     security: "is_granted('ROLE_TRAINING_TO_TRAINING_SET_POST')",
     processor: TrainingToTrainingSetPostProcess::class
 )]
 #[Put(
+    normalizationContext: ['groups' => ['training_to_training_set_get']],
+    denormalizationContext: ['groups' => ['training_to_training_set_put']],
     security: "is_granted('ROLE_TRAINING_TO_TRAINING_SET_PUT')",
     processor: TrainingToTrainingSetPutProcess::class
 )]
 #[Delete(
+    denormalizationContext: ['groups' => ['training_to_training_set_delete']],
     security: "is_granted('ROLE_TRAINING_TO_TRAINING_SET_DELETE', object)",
     processor: TrainingToTrainingSetDeleteProcess::class
 )]
 class TrainingToTrainingSet extends SoftDelete
 {
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
+    #[Groups(['training_to_training_set_get', 'training_to_training_set_post', 'training_to_training_set_put', 'training_to_training_set_delete'])]
     private ?int $id = null;
 
     #[Orm\Column(name:'training_id',type: 'integer')]
+    #[Groups(['training_to_training_set_get', 'training_to_training_set_post', 'training_to_training_set_put', 'training_to_training_set_delete'])]
     private int $trainingId;
 
     #[ORM\OneToOne(targetEntity: Training::class, cascade: ['persist'])]
+    #[Groups(['training_to_training_set_get', 'training_to_training_set_post', 'training_to_training_set_put', 'training_to_training_set_delete'])]
     private ?Training $training = null;
 
     #[Orm\Column(name:'training_set_id', type: 'integer')]
+    #[Groups(['training_to_training_set_get', 'training_to_training_set_post', 'training_to_training_set_put', 'training_to_training_set_delete'])]
     private int $trainingSetId;
 
     #[Orm\Column(name:'amount', type: 'integer', nullable: true)]
+    #[Groups(['training_to_training_set_get', 'training_to_training_set_post', 'training_to_training_set_put', 'training_to_training_set_delete'])]
     private ?int $amount = null;
 
     #[Orm\Column(name:'series_amount', type: 'integer', nullable: true)]
+    #[Groups(['training_to_training_set_get', 'training_to_training_set_post', 'training_to_training_set_put', 'training_to_training_set_delete'])]
     private ?int $seriesAmount = null;
 
     #[Orm\Column(name:'time', type: 'integer', nullable: true)]
+    #[Groups(['training_to_training_set_get', 'training_to_training_set_post', 'training_to_training_set_put', 'training_to_training_set_delete'])]
     private ?int $time = null;
 
 

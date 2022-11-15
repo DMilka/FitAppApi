@@ -24,27 +24,27 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 #[ApiResource]
 #[Get(
-    normalizationContext: ['groups' => ['ingredient_read']],
+    normalizationContext: ['groups' => ['ingredient_get']],
     security: "is_granted('ROLE_INGREDIENT_GET')",
 )]
 #[GetCollection(
-    normalizationContext: ['groups' => ['ingredient_read']],
+    normalizationContext: ['groups' => ['ingredient_get']],
     security: "is_granted('ROLE_INGREDIENT_GET')",
 )]
 #[Post(
-    normalizationContext: ['groups' => ['ingredient_read']],
-    denormalizationContext: ['groups' => ['ingredient_write']],
+    normalizationContext: ['groups' => ['ingredient_get']],
+    denormalizationContext: ['groups' => ['ingredient_post']],
     security: "is_granted('ROLE_INGREDIENT_POST')",
     processor: IngredientPostProcess::class
 )]
 #[Put(
-    normalizationContext: ['groups' => ['ingredient_read']],
-    denormalizationContext: ['groups' => ['ingredient_update']],
+    normalizationContext: ['groups' => ['ingredient_get']],
+    denormalizationContext: ['groups' => ['ingredient_put']],
     security: "is_granted('ROLE_INGREDIENT_PUT')",
     processor: IngredientPutProcess::class
 )]
 #[Delete(
-    denormalizationContext: ['groups' => ['ingredient_remove']],
+    denormalizationContext: ['groups' => ['ingredient_delete']],
     security: "is_granted('ROLE_INGREDIENT_DELETE', object)",
     processor: IngredientDeleteProcess::class
 )]
@@ -53,23 +53,23 @@ class Ingredient extends UserExtension implements NutritionalValuesInterface
     use NutritionalValues;
 
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
-    #[Groups(['ingredient_read'])]
+    #[Groups(['ingredient_get'])]
     private int $id;
 
     #[Orm\Column(name:'name',type: 'string')]
-    #[Groups(['ingredient_read', 'ingredient_write', 'ingredient_update', 'ingredient_remove', 'ingredient_to_meal_read'])]
+    #[Groups(['ingredient_get', 'ingredient_post', 'ingredient_put', 'ingredient_delete', 'ingredient_to_meal_read'])]
     private string $name;
 
     #[Orm\Column(name:'description',type: 'string', nullable: true)]
-    #[Groups(['ingredient_read', 'ingredient_write', 'ingredient_update', 'ingredient_remove', 'ingredient_to_meal_read'])]
+    #[Groups(['ingredient_get', 'ingredient_post', 'ingredient_put', 'ingredient_delete', 'ingredient_to_meal_read'])]
     private ?string $description = null;
 
     #[Orm\Column(name:'amount',type: 'float', nullable: true)]
-    #[Groups(['ingredient_read', 'ingredient_write', 'ingredient_update', 'ingredient_remove', 'ingredient_to_meal_read'])]
+    #[Groups(['ingredient_get', 'ingredient_post', 'ingredient_put', 'ingredient_delete', 'ingredient_to_meal_read'])]
     private ?float $amount = null;
 
     #[Orm\Column(name:'amount_type_id',type: 'integer', nullable: true)]
-    #[Groups(['ingredient_read', 'ingredient_write', 'ingredient_update', 'ingredient_remove', 'ingredient_to_meal_read'])]
+    #[Groups(['ingredient_get', 'ingredient_post', 'ingredient_put', 'ingredient_delete', 'ingredient_to_meal_read'])]
     private int $amountTypeId;
 
     #[Orm\Column(name:'divider_value',type: 'integer')]

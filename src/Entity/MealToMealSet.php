@@ -14,50 +14,65 @@ use App\EntityProcesses\MealToMealSet\MealToMealSetPostProcess;
 use App\EntityProcesses\MealToMealSet\MealToMealSetPutProcess;
 use App\Repository\MealToMealSetRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(
     repositoryClass: MealToMealSetRepository::class
 )]
 #[ApiResource]
 #[Get(
-    security: "is_granted('ROLE_MEAL_SET_GET')",
+    normalizationContext: ['groups' => ['meal_to_meal_set_get']],
+    security: "is_granted('ROLE_MEAL_TO_MEAL_SET_GET')",
 )]
 #[GetCollection(
-    security: "is_granted('ROLE_MEAL_SET_GET')",
+    normalizationContext: ['groups' => ['meal_to_meal_set_get']],
+    security: "is_granted('ROLE_MEAL_TO_MEAL_SET_GET')",
 )]
 #[Post(
-    security: "is_granted('ROLE_MEAL_SET_POST')",
+    normalizationContext: ['groups' => ['meal_to_meal_set_get']],
+    denormalizationContext: ['groups' => ['meal_to_meal_set_post']],
+    security: "is_granted('ROLE_MEAL_TO_MEAL_SET_POST')",
     processor: MealToMealSetPostProcess::class
 )]
 #[Put(
-    security: "is_granted('ROLE_MEAL_SET_PUT')",
+    normalizationContext: ['groups' => ['meal_to_meal_set_get']],
+    denormalizationContext: ['groups' => ['meal_to_meal_set_put']],
+    security: "is_granted('ROLE_MEAL_TO_MEAL_SET_PUT')",
     processor: MealToMealSetPutProcess::class
 )]
 #[Delete(
-    security: "is_granted('ROLE_MEAL_SET_DELETE', object)",
+    denormalizationContext: ['groups' => ['meal_to_meal_set_post']],
+    security: "is_granted('ROLE_MEAL_TO_MEAL_SET_DELETE', object)",
     processor: MealToMealSetDeleteProcess::class
 )]
 class MealToMealSet extends SoftDelete
 {
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
+    #[Groups(['meal_to_meal_set_get'])]
     private ?int $id = null;
 
     #[Orm\Column(name:'meal_set_id',type: 'integer')]
+    #[Groups(['meal_to_meal_set_get', 'meal_to_meal_set_post', 'meal_to_meal_set_put', 'meal_to_meal_set_delete'])]
     private int $mealSetId;
 
     #[Orm\Column(name:'meal_id',type: 'integer',nullable: true)]
+    #[Groups(['meal_to_meal_set_get', 'meal_to_meal_set_post', 'meal_to_meal_set_put', 'meal_to_meal_set_delete'])]
     private ?int $mealId = null;
 
     #[ORM\OneToOne(targetEntity: Meal::class, cascade: ['persist'])]
+    #[Groups(['meal_to_meal_set_get', 'meal_to_meal_set_post', 'meal_to_meal_set_put', 'meal_to_meal_set_delete'])]
     private ?Meal $meal = null;
 
     #[Orm\Column(name:'ingredient_id',type: 'integer',nullable: true)]
+    #[Groups(['meal_to_meal_set_get', 'meal_to_meal_set_post', 'meal_to_meal_set_put', 'meal_to_meal_set_delete'])]
     private ?int $ingredientId = null;
 
     #[ORM\OneToOne(targetEntity: Ingredient::class, cascade: ['persist'])]
+    #[Groups(['meal_to_meal_set_get', 'meal_to_meal_set_post', 'meal_to_meal_set_put', 'meal_to_meal_set_delete'])]
     private ?Ingredient $ingredient = null;
 
     #[Orm\Column(name:'amount',type: 'string', nullable: true)]
+    #[Groups(['meal_to_meal_set_get', 'meal_to_meal_set_post', 'meal_to_meal_set_put', 'meal_to_meal_set_delete'])]
     private ?string $amount = null;
 
     /**

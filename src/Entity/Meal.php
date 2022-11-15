@@ -16,26 +16,34 @@ use App\EntityProcesses\Meal\MealPutProcess;
 use App\Repository\MealRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Core\Database\HelperEntity\UserExtension;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(
     repositoryClass: MealRepository::class
 )]
 #[ApiResource]
 #[Get(
+    normalizationContext: ['groups' => ['meal_get']],
     security: "is_granted('ROLE_MEAL_GET')",
 )]
 #[GetCollection(
+    normalizationContext: ['groups' => ['meal_get']],
     security: "is_granted('ROLE_MEAL_GET')",
 )]
 #[Post(
+    normalizationContext: ['groups' => ['meal_get']],
+    denormalizationContext: ['groups' => ['meal_post']],
     security: "is_granted('ROLE_MEAL_POST')",
     processor: MealPostProcess::class
 )]
 #[Put(
+    normalizationContext: ['groups' => ['meal_get']],
+    denormalizationContext: ['groups' => ['meal_put']],
     security: "is_granted('ROLE_MEAL_PUT')",
     processor: MealPutProcess::class
 )]
 #[Delete(
+    denormalizationContext: ['groups' => ['meal_delete']],
     security: "is_granted('ROLE_MEAL_DELETE', object)",
     processor: MealDeleteProcess::class
 )]
@@ -44,12 +52,15 @@ class Meal extends UserExtension implements NutritionalValuesInterface
     use NutritionalValues;
 
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
+    #[Groups(['meal_get'])]
     private ?int $id = null;
 
     #[Orm\Column(name:'name',type: 'string')]
+    #[Groups(['meal_get', 'meal_post', 'meal_put', 'meal_delete'])]
     private string $name;
 
     #[Orm\Column(name:'description',type: 'string', nullable: true)]
+    #[Groups(['meal_get', 'meal_post', 'meal_put', 'meal_delete'])]
     private ?string $description = null;
 
     public function getId(): ?int

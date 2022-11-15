@@ -21,49 +21,49 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 #[ApiResource]
 #[Get(
-    normalizationContext: ['groups' => ['ingredient_to_meal_read']],
+    normalizationContext: ['groups' => ['ingredient_to_meal_get']],
     security: "is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
 )]
 #[GetCollection(
-    normalizationContext: ['groups' => ['ingredient_to_meal_read']],
+    normalizationContext: ['groups' => ['ingredient_to_meal_get']],
     security: "is_granted('ROLE_INGREDIENT_TO_MEAL_GET')",
 )]
 #[Post(
-    normalizationContext: ['groups' => ['ingredient_to_meal_read']],
-    denormalizationContext: ['groups' => ['ingredient_to_meal_write']],
+    normalizationContext: ['groups' => ['ingredient_to_meal_get']],
+    denormalizationContext: ['groups' => ['ingredient_to_meal_post']],
     security: "is_granted('ROLE_INGREDIENT_TO_MEAL_POST')",
     processor: IngredientToMealPostProcess::class
 )]
 #[Put(
-    normalizationContext: ['groups' => ['ingredient_to_meal_read']],
-    denormalizationContext: ['groups' => ['ingredient_to_meal_update']],
+    normalizationContext: ['groups' => ['ingredient_to_meal_get']],
+    denormalizationContext: ['groups' => ['ingredient_to_meal_put']],
     security: "is_granted('ROLE_INGREDIENT_TO_MEAL_PUT')",
     processor: IngredientToMealPutProcess::class
 )]
 #[Delete(
-    denormalizationContext: ['groups' => ['ingredient_to_meal_remove']],
+    denormalizationContext: ['groups' => ['ingredient_to_meal_delete']],
     security: "is_granted('ROLE_INGREDIENT_TO_MEAL_DELETE', object)",
     processor: IngredientToMealDeleteProcess::class
 )]
 class IngredientToMeal extends SoftDelete
 {
     #[Orm\Id, ORM\Column(name: 'id', type:'integer'), ORM\GeneratedValue]
-    #[Groups(['ingredient_to_meal_read', 'ingredient_to_meal_write','ingredient_to_meal_update', 'ingredient_to_meal_remove'])]
+    #[Groups(['ingredient_to_meal_get', 'ingredient_to_meal_post','ingredient_to_meal_put', 'ingredient_to_meal_delete'])]
     private ?int $id = null;
 
     #[Orm\Column(name:'ingredient_id',type: 'integer')]
     private int $ingredientId;
 
     #[ORM\OneToOne(targetEntity: Ingredient::class, cascade: ['persist'])]
-    #[Groups(['ingredient_to_meal_read', 'ingredient_to_meal_write','ingredient_to_meal_update', 'ingredient_to_meal_remove'])]
+    #[Groups(['ingredient_to_meal_get', 'ingredient_to_meal_post','ingredient_to_meal_put', 'ingredient_to_meal_delete'])]
     private ?Ingredient $ingredient = null;
 
     #[Orm\Column(name:'meal_id', type: 'integer')]
-    #[Groups(['ingredient_to_meal_read', 'ingredient_to_meal_write','ingredient_to_meal_update', 'ingredient_to_meal_remove'])]
+    #[Groups(['ingredient_to_meal_get', 'ingredient_to_meal_post','ingredient_to_meal_put', 'ingredient_to_meal_delete'])]
     private int $mealId;
 
     #[Orm\Column(name:'amount',type: 'integer')]
-    #[Groups(['ingredient_read', 'ingredient_write', 'ingredient_update', 'ingredient_remove', 'ingredient_to_meal_read'])]
+    #[Groups(['ingredient_get', 'ingredient_post', 'ingredient_put', 'ingredient_delete', 'ingredient_to_meal_get'])]
     private int $amount = 0;
 
     public function getId(): ?int
