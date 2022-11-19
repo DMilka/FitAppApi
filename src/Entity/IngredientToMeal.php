@@ -52,6 +52,7 @@ class IngredientToMeal extends SoftDelete
     private ?int $id = null;
 
     #[Orm\Column(name:'ingredient_id',type: 'integer')]
+    #[Groups(['ingredient_to_meal_get', 'ingredient_to_meal_post','ingredient_to_meal_put', 'ingredient_to_meal_delete'])]
     private int $ingredientId;
 
     #[ORM\OneToOne(targetEntity: Ingredient::class, cascade: ['persist'])]
@@ -63,7 +64,7 @@ class IngredientToMeal extends SoftDelete
     private int $mealId;
 
     #[Orm\Column(name:'amount',type: 'integer')]
-    #[Groups(['ingredient_get', 'ingredient_post', 'ingredient_put', 'ingredient_delete', 'ingredient_to_meal_get'])]
+    #[Groups(['ingredient_to_meal_get', 'ingredient_to_meal_post', 'ingredient_to_meal_put', 'ingredient_to_meal_delete'])]
     private int $amount = 0;
 
     public function getId(): ?int

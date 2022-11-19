@@ -7,7 +7,9 @@ use App\Entity\Ingredient;
 use App\Entity\IngredientToMeal;
 use App\Entity\Meal;
 use App\Entity\MealSet;
+use App\Entity\MealSetToSchedule;
 use App\Entity\MealToMealSet;
+use App\Entity\Schedule;
 use App\Entity\Training;
 use App\Entity\TrainingSet;
 use App\Entity\Users;
@@ -16,7 +18,9 @@ use App\Repository\IngredientRepository;
 use App\Repository\IngredientToMealRepository;
 use App\Repository\MealRepository;
 use App\Repository\MealSetRepository;
+use App\Repository\MealSetToScheduleRepository;
 use App\Repository\MealToMealSetRepository;
+use App\Repository\ScheduleRepository;
 use App\Repository\TrainingRepository;
 use App\Repository\TrainingSetRepository;
 use App\Repository\UsersRepository;
@@ -82,5 +86,15 @@ trait HandlerDatabaseTrait
     public function getTrainingSetRepository(): TrainingSetRepository
     {
         return $this->getRepositoryForClass(TrainingSet::class);
+    }
+
+    public function getScheduleRepository(): ScheduleRepository
+    {
+        return $this->getRepositoryForClass(Schedule::class);
+    }
+
+    public function getMealSetToScheduleRepository(): MealSetToScheduleRepository
+    {
+        return $this->getRepositoryForClass(MealSetToSchedule::class);
     }
 }

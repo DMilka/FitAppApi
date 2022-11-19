@@ -52,11 +52,11 @@ class TrainingSet extends UserExtension
     private ?int $id = null;
 
     #[Orm\Column(name:'name',type: 'string')]
-    #[Groups(['training_set_get', 'training_set_post', 'training_set_put', 'training_set_delete'])]
+    #[Groups(['training_set_get', 'training_set_post', 'training_set_put', 'training_set_delete', 'training_set_to_schedule_get'])]
     private string $name;
 
     #[Orm\Column(name:'description',type: 'string', nullable: true)]
-    #[Groups(['training_set_get', 'training_set_post', 'training_set_put', 'training_set_delete'])]
+    #[Groups(['training_set_get', 'training_set_post', 'training_set_put', 'training_set_delete', 'training_set_to_schedule_get'])]
     private ?string $description = null;
 
     public function getId(): ?int

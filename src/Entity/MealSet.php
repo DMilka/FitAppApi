@@ -56,11 +56,11 @@ class MealSet extends UserExtension implements NutritionalValuesInterface
     private ?int $id = null;
 
     #[Orm\Column(name:'name',type: 'string')]
-    #[Groups(['meal_set_get', 'meal_set_post', 'meal_set_put', 'meal_set_delete'])]
+    #[Groups(['meal_set_get', 'meal_set_post', 'meal_set_put', 'meal_set_delete', "meal_set_to_schedule_get"])]
     private string $name;
 
     #[Orm\Column(name:'description',type: 'string', nullable: true)]
-    #[Groups(['meal_set_get', 'meal_set_post', 'meal_set_put', 'meal_set_delete'])]
+    #[Groups(['meal_set_get', 'meal_set_post', 'meal_set_put', 'meal_set_delete', "meal_set_to_schedule_get"])]
     private ?string $description = null;
 
     public function getId(): ?int

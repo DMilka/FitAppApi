@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\AmountType;
+use App\Core\Logger\LoggerTrait;
 use App\Entity\Schedule;
-use App\Entity\Training;
-use App\Entity\TrainingSet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class TrainingSetRepository extends ServiceEntityRepository
+class ScheduleRepository extends ServiceEntityRepository
 {
+    use LoggerTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, TrainingSet::class);
+        parent::__construct($registry, Schedule::class);
     }
 
-    public function findNotDeleted(int $id): ?TrainingSet
+    public function findNotDeleted(int $id): ?Schedule
     {
         $query = $this->createQueryBuilder('at')
             ->andWhere('at.id = :id')

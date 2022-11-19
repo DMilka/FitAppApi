@@ -136,6 +136,18 @@ class Users extends SoftDelete implements UserInterface, PasswordAuthenticatedUs
                 'ROLE_TRAINING_TO_TRAINING_SET_POST',
                 'ROLE_TRAINING_TO_TRAINING_SET_PUT',
                 'ROLE_TRAINING_TO_TRAINING_SET_DELETE',
+                'ROLE_SCHEDULE_GET',
+                'ROLE_SCHEDULE_POST',
+                'ROLE_SCHEDULE_PUT',
+                'ROLE_SCHEDULE_DELETE',
+                'ROLE_MEAL_SET_TO_SCHEDULE_GET',
+                'ROLE_MEAL_SET_TO_SCHEDULE_POST',
+                'ROLE_MEAL_SET_TO_SCHEDULE_PUT',
+                'ROLE_MEAL_SET_TO_SCHEDULE_DELETE',
+                'ROLE_TRAINING_SET_TO_SCHEDULE_GET',
+                'ROLE_TRAINING_SET_TO_SCHEDULE_POST',
+                'ROLE_TRAINING_SET_TO_SCHEDULE_PUT',
+                'ROLE_TRAINING_SET_TO_SCHEDULE_DELETE',
         ];
     }
 
